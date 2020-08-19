@@ -29,11 +29,13 @@ function App() {
                     className='ui image tiny' 
                     src={player.profileImg}/>
                 </div>
-                <div className="header">
+                <div className="content">
+                    <div className="header">
                     {player.displayName}
-                </div>
-                <div className="Content">
-                    {player.position} {player.team}
+                    </div>
+                    <div className="description">
+                        {player.position} {player.team}
+                    </div>
                 </div>
             </div>
         )   
