@@ -3,3 +3,7 @@ body {
     margin: 20px;
   }
   
+.items {
+  height: 75vh;
+  overflow: scroll;
+}
