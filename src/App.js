@@ -31,7 +31,7 @@ function App() {
                 </div>
                 <div className="content">
                     <div className="header">
-                    {player.displayName}
+                        {player.displayName}
                     </div>
                     <div className="description">
                         {player.position} {player.team}
@@ -47,11 +47,15 @@ function App() {
             setLoading({...loading,initialLoading:false})
         }
         return (
-            <div className="ui items">
-                {fullPlayerList.map((player, index) => {
-                    if (index < 100)
-                        return renderPlayerCard(player)
-                })}
+            //need to make this a scrollable box with a max height
+            //check semantic ui containers
+            <div>
+                <div className="ui items">
+                    {fullPlayerList.map((player, index) => {
+                        if (index < 100)
+                            return renderPlayerCard(player)
+                    })}
+                </div>
             </div>
         )
     }
