@@ -6,14 +6,19 @@ function App() {
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
     const [input, setInput] = useState({playerSearch: ''})
     const [loading, setLoading] = useState({initialLoading: true, loading: false})
+    const [noResults, setNoResults] = useState(false)
     //const [step, setStep] = ({playerList: 100})
 
     const handleInputChange = e => {
-        let fullList = fullPlayerList
-        let newPlayerList = fullList.filter((player) => {
-            player.displayName.includes("th")
-        })
-        setFilteredPlayerList(newPlayerList)
+        setNoResults(false)
+        let newList = fullPlayerList.filter(function(player) {
+            if (this.count < 10 && player.displayName.includes(e.currentTarget.value))
+                {this.count ++
+                return true}
+            setNoResults(true)
+            return false
+        }, {count: 0})
+        setFilteredPlayerList(newList)
     }
     
     const renderInputForm = () => {
@@ -65,7 +70,7 @@ function App() {
             loadPlayerList()
             setLoading({...loading,initialLoading:false})
         }
-        if (!filteredPlayerList) {
+        if (filteredPlayerList.length === 0) {
             return (
                 //need to make this a scrollable box with a max height
                 //check semantic ui containers
@@ -94,11 +99,23 @@ function App() {
         }
     }
 
+    const renderNoResults = () => {
+        if (!noResults) {
+            return
+        }
+        return (
+            <div>
+                No Results
+            </div>
+        )
+    }
+
     return (
         <div className="App">
             <div className="ui text container">
                 {renderInputForm()}
                 {renderPlayerList()}
+                {renderNoResults()}
             </div>
         </div>
     )
