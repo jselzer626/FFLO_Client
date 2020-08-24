@@ -6,16 +6,20 @@ function App() {
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
     const [input, setInput] = useState({playerSearch: ''})
     const [loading, setLoading] = useState({initialLoading: true, loading: false})
-    const [noResults, setNoResults] = useState(false)
+    const [noResults, setNoResults] = useState({search: false, query: ''})
     //const [step, setStep] = ({playerList: 100})
 
     const handleInputChange = e => {
+        setNoResults({...noResults, search: false})
         let newList = fullPlayerList.filter(function(player) {
             if (this.count < 10 && player.displayName.toLowerCase().includes
                 (e.currentTarget.value.toLowerCase()))
                 {this.count ++
                 return true}
         }, {count: 0})
+        if (newList.length === 0) {
+            setNoResults({...noResults, search: true, query: e.currentTarget.value})
+        }
         setFilteredPlayerList(newList)
     }
     
@@ -64,15 +68,24 @@ function App() {
     }
 
     const renderPlayerList = () => {
+
+        console.log("player list rendered")
         if (loading.initialLoading) {
             loadPlayerList()
             setLoading({...loading,initialLoading:false})
+        }
+        if (noResults.search) {
+            return (
+                <div className="column">
+                    No matching results for {noResults.query}
+                </div>
+            )
         }
         if (filteredPlayerList.length === 0) {
             return (
                 //need to make this a scrollable box with a max height
                 //check semantic ui containers
-                <div>
+                <div className="column">
                     <div className="ui items">
                         {fullPlayerList.map((player, index) => {
                             if (index < 100)
@@ -86,7 +99,7 @@ function App() {
             return (
                 //need to make this a scrollable box with a max height
                 //check semantic ui containers
-                <div>
+                <div className="column">
                     <div className="ui items">
                         {filteredPlayerList.map((player, index) => {
                             return renderPlayerCard(player)
@@ -97,23 +110,14 @@ function App() {
         }
     }
 
-    const renderNoResults = () => {
-        if (!noResults) {
-            return
-        }
-        return (
-            <div>
-                No Results
-            </div>
-        )
-    }
 
     return (
         <div className="App">
             <div className="ui text container">
+                <div className="ui stackable two column grid">
                 {renderInputForm()}
                 {renderPlayerList()}
-                {renderNoResults()}
+                </div>
             </div>
         </div>
     )
