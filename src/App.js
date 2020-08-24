@@ -7,6 +7,7 @@ function App() {
     const [input, setInput] = useState({playerSearch: ''})
     const [loading, setLoading] = useState({initialLoading: true, loading: false})
     const [noResults, setNoResults] = useState({search: false, query: ''})
+    const [currentRoster, setCurrentRoster] = useState([])
     //const [step, setStep] = ({playerList: 100})
 
     const handleInputChange = e => {
@@ -49,7 +50,9 @@ function App() {
 
     const renderPlayerCard = player => {
         return (
-            <div className="item">
+            <div className="item"
+                onClick={() => handlePlayerAdd(player)}    
+            >
                 <div>
                     <img
                     className='ui image tiny' 
@@ -69,14 +72,13 @@ function App() {
 
     const renderPlayerList = () => {
 
-        console.log("player list rendered")
         if (loading.initialLoading) {
             loadPlayerList()
             setLoading({...loading,initialLoading:false})
         }
         if (noResults.search) {
             return (
-                <div className="column">
+                <div>
                     No matching results for {noResults.query}
                 </div>
             )
@@ -85,7 +87,7 @@ function App() {
             return (
                 //need to make this a scrollable box with a max height
                 //check semantic ui containers
-                <div className="column">
+                <div>
                     <div className="ui items">
                         {fullPlayerList.map((player, index) => {
                             if (index < 100)
@@ -99,7 +101,7 @@ function App() {
             return (
                 //need to make this a scrollable box with a max height
                 //check semantic ui containers
-                <div className="column">
+                <div>
                     <div className="ui items">
                         {filteredPlayerList.map((player, index) => {
                             return renderPlayerCard(player)
@@ -110,13 +112,28 @@ function App() {
         }
     }
 
+    const renderRoster = () => {
+        return (
+            currentRoster.map((player) => {
+                return renderPlayerCard(player)
+            })
+        )
+    
+    }
+
 
     return (
         <div className="App">
             <div className="ui text container">
                 <div className="ui stackable two column grid">
-                {renderInputForm()}
-                {renderPlayerList()}
+                    <div className="four wide column">
+                        My team
+                        {renderRoster()}
+                    </div>
+                    <div className="twelve wide column">
+                        {renderInputForm()}
+                        {renderPlayerList()}
+                    </div>
                 </div>
             </div>
         </div>
