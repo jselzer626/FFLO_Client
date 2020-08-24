@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 const details = ['type', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
+const leagueTypes = ["Standard", "PPR"]
+const flexPositions = ["WR", "TE", "RB"]
 
 function App() {
 
@@ -10,6 +12,7 @@ function App() {
     const [noResults, setNoResults] = useState({search: false, query: ''})
     const [currentRoster, setCurrentRoster] = useState([])
     const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 15, Bench: 5})
+    const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
     //const [step, setStep] = ({playerList: 100})
 
     const handleInputChange = e => {
@@ -49,20 +52,77 @@ function App() {
             console.warn(e)
         }
     }
-    const renderRosterDetails = () => {
+    const renderRosterSelect = () => {
         return (
             details.map(detail => {
+                if (detail === "type") {
+                    return (
+                        <div>
+                            {detail}
+                            {leagueTypes.map(leagueType => {
+                                return (
+                                    <button className="ui button small blue"
+                                    onClick = {() => 
+                                        {let newDetails = {...rosterDetails, type: leagueType}
+                                        setRosterDetails(newDetails)}
+                                    }>{leagueType}</button>
+                                )
+                            })}
+
+                        </div>
+                    )
+                }
                 return (
                     <div>
                         {detail}
-                        <input></input>
+                        <input
+                            type="text"
+                            value={rosterDetails[`${detail}`]}
+                            onChange={(e) => {
+                                let newDetails = {...rosterDetails, [detail]: parseInt(e.currentTarget.value)}
+                                setRosterDetails(newDetails)
+                            }}
+                        />
                     </div>
                 )
             })
-
         )
+    }
 
+    const addPlayerToRoster = player => {
 
+        let newDetails = {...addedPlayerDetails}
+        if (addedPlayerDetails[`${player.position}`] < rosterDetails[`${player.position}`]) {
+            console.log('here')
+            newDetails[`${player.position}`] += 1
+        }
+        else if (addedPlayerDetails['FLEX'] < rosterDetails['FLEX'] && flexPositions.includes(player.position)) {
+            newDetails.FLEX += 1
+        }
+
+        newDetails.Total += 1
+        setAddedPlayerDetails(newDetails)
+
+    }
+
+    const renderRosterDetails = () => {
+
+        return (
+            details.map(detail => {
+                if (detail !== "type") {
+                return (
+                    <div
+                        style={{backgroundColor: rosterDetails[`${detail}`] === addedPlayerDetails[`${detail}`] ? 
+                        "lightGreen" : ''}}>
+                        <b>{detail}</b>
+                        {<br/>}
+                        Total Needed: {rosterDetails[`${detail}`]}
+                        {<br/>}
+                        Left To add: {rosterDetails[`${detail}`] - addedPlayerDetails[`${detail}`]}
+                    </div>
+                )}
+            })
+        )
     }
 
     const renderPlayerCard = (player, location="mainSearch") => {
@@ -70,8 +130,9 @@ function App() {
             return (
                 <div className="item"
                     onClick={() => {
-                        if (currentRoster.includes(player)) {
+                        if (currentRoster.includes(player) && currentRoster.length < rosterDetails.Total) {
                             return}
+                        addPlayerToRoster(player)
                         let newRoster = [...currentRoster]
                         newRoster.push(player)
                         setCurrentRoster(newRoster)}}
@@ -98,7 +159,7 @@ function App() {
                         <img
                         className='ui image tiny' 
                         src={player.profileImg}/>
-                        <i class="times icon"
+                        <i className="times icon"
                             onClick={() => {
                                 let newRoster = currentRoster.filter(member => member.id !== player.id)
                                 setCurrentRoster(newRoster)
@@ -177,6 +238,8 @@ function App() {
                 <div className="ui stackable three column grid">
                     <div className="four wide column ui raised segment">
                         Roster Details
+                        {renderRosterSelect()}
+                        Players Currently Added
                         {renderRosterDetails()}
                     </div>
                     <div className="eight wide column">
