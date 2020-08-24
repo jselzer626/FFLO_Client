@@ -10,13 +10,11 @@ function App() {
     //const [step, setStep] = ({playerList: 100})
 
     const handleInputChange = e => {
-        setNoResults(false)
         let newList = fullPlayerList.filter(function(player) {
-            if (this.count < 10 && player.displayName.includes(e.currentTarget.value))
+            if (this.count < 10 && player.displayName.toLowerCase().includes
+                (e.currentTarget.value.toLowerCase()))
                 {this.count ++
                 return true}
-            setNoResults(true)
-            return false
         }, {count: 0})
         setFilteredPlayerList(newList)
     }
