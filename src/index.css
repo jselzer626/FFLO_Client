@@ -7,3 +7,11 @@ body {
   height: 75vh;
   overflow: scroll;
 }
+
+.times {
+  float: right;
+}
+
+.image.tiny {
+  margin: 0px;
+}

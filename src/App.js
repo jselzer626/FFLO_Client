@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+const details = ['type', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 
 function App() {
 
@@ -8,6 +9,7 @@ function App() {
     const [loading, setLoading] = useState({initialLoading: true, loading: false})
     const [noResults, setNoResults] = useState({search: false, query: ''})
     const [currentRoster, setCurrentRoster] = useState([])
+    const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 15, Bench: 5})
     //const [step, setStep] = ({playerList: 100})
 
     const handleInputChange = e => {
@@ -47,27 +49,74 @@ function App() {
             console.warn(e)
         }
     }
-
-    const renderPlayerCard = player => {
+    const renderRosterDetails = () => {
         return (
-            <div className="item"
-                onClick={() => handlePlayerAdd(player)}    
-            >
-                <div>
-                    <img
-                    className='ui image tiny' 
-                    src={player.profileImg}/>
-                </div>
-                <div className="content">
-                    <div className="header">
-                        {player.displayName}
+            details.map(detail => {
+                return (
+                    <div>
+                        {detail}
+                        <input></input>
                     </div>
-                    <div className="description">
-                        {player.position} {player.team}
+                )
+            })
+
+        )
+
+
+    }
+
+    const renderPlayerCard = (player, location="mainSearch") => {
+        if (location==="mainSearch") {
+            return (
+                <div className="item"
+                    onClick={() => {
+                        if (currentRoster.includes(player)) {
+                            return}
+                        let newRoster = [...currentRoster]
+                        newRoster.push(player)
+                        setCurrentRoster(newRoster)}}
+                    >
+                    <div>
+                        <img
+                        className='ui image tiny' 
+                        src={player.profileImg}/>
+                    </div>
+                    <div className="content">
+                        <div className="header">
+                            {player.displayName}
+                        </div>
+                        <div className="description">
+                            {player.position} {player.team}
+                        </div>
                     </div>
                 </div>
-            </div>
-        )   
+            )   
+        } else {
+            return (
+                <div className="ui segment raised">
+                    <div>
+                        <img
+                        className='ui image tiny' 
+                        src={player.profileImg}/>
+                        <i class="times icon"
+                            onClick={() => {
+                                let newRoster = currentRoster.filter(member => member.id !== player.id)
+                                setCurrentRoster(newRoster)
+                            }}>
+                        </i>
+                    </div>
+                    <div className="content">
+                        <div className="header">
+                            {player.displayName}
+                        </div>
+                        <div className="description">
+                            {player.position} {player.team}
+                        </div>
+                    </div>
+                </div>
+            )  
+
+        }
     }
 
     const renderPlayerList = () => {
@@ -115,7 +164,7 @@ function App() {
     const renderRoster = () => {
         return (
             currentRoster.map((player) => {
-                return renderPlayerCard(player)
+                return renderPlayerCard(player, "sideBar")
             })
         )
     
@@ -125,14 +174,18 @@ function App() {
     return (
         <div className="App">
             <div className="ui text container">
-                <div className="ui stackable two column grid">
+                <div className="ui stackable three column grid">
+                    <div className="four wide column ui raised segment">
+                        Roster Details
+                        {renderRosterDetails()}
+                    </div>
+                    <div className="eight wide column">
+                        {renderInputForm()}
+                        {renderPlayerList()}
+                    </div>
                     <div className="four wide column">
                         My team
                         {renderRoster()}
-                    </div>
-                    <div className="twelve wide column">
-                        {renderInputForm()}
-                        {renderPlayerList()}
                     </div>
                 </div>
             </div>
