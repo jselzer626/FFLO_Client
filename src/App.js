@@ -9,6 +9,7 @@ const allPositions = ['QB', 'WR', 'TE', 'FLEX', 'K', 'DEF']
 function App() {
 
     const [fullPlayerList, setFullPlayerList] = useState([])
+    const [showRosterSelect, setShowRosterSelect] = useState(false)
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
     const [noResults, setNoResults] = useState({search: false, query: ''})
     const [currentRoster, setCurrentRoster] = useState([])
@@ -59,6 +60,7 @@ function App() {
                     return (
                         <div>
                             {detail}
+                            {<br/>}
                             {leagueTypes.map(leagueType => {
                                 return (
                                     <button className="ui button small blue"
@@ -73,7 +75,7 @@ function App() {
                     )
                 }
                 return (
-                    <div>
+                    <div className="{'inline field'}">
                         {detail}
                         <input
                             type="text"
@@ -241,7 +243,9 @@ function App() {
                 <div className="ui stackable three column grid">
                     <div className="four wide column ui raised segment">
                         Roster Details
-                        {renderRosterSelect()}
+                        <div className="ui form">
+                            {renderRosterSelect()}
+                        </div>
                         Players Currently Added
                         {renderRosterDetails()}
                     </div>
