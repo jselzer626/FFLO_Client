@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 const details = ['type', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
 const flexPositions = ["WR", "TE", "RB"]
+const allPositions = ['QB', 'WR', 'TE', 'FLEX', 'K', 'DEF']
 
 function App() {
 
@@ -89,18 +90,22 @@ function App() {
         )
     }
 
-    const addPlayerToRoster = player => {
+    const modifyRoster = (currentPlayer, action) => {
 
+        let newRoster = [...currentRoster]
         let newDetails = {...addedPlayerDetails}
-        if (addedPlayerDetails[`${player.position}`] < rosterDetails[`${player.position}`]) {
-            console.log('here')
-            newDetails[`${player.position}`] += 1
+        action === "add" ? newRoster.push(currentPlayer) : newRoster = newRoster.filter(player => player !== currentPlayer)
+        let requiredStarters = 0
+        allPositions.forEach(pos => {
+            newDetails[`${pos}`] = newRoster.filter(player => player.position === pos).length
+            requiredStarters += rosterDetails[`${pos}`]
+        })
+        newDetails.Total = currentRoster.length
+        if (newDetails.Total > requiredStarters) {
+            newDetails.Bench = newDetails.Total - requiredStarters
         }
-        else if (addedPlayerDetails['FLEX'] < rosterDetails['FLEX'] && flexPositions.includes(player.position)) {
-            newDetails.FLEX += 1
-        }
-
-        newDetails.Total += 1
+        
+        setCurrentRoster(newRoster)
         setAddedPlayerDetails(newDetails)
 
     }
@@ -112,13 +117,14 @@ function App() {
                 if (detail !== "type") {
                 return (
                     <div
-                        style={{backgroundColor: rosterDetails[`${detail}`] === addedPlayerDetails[`${detail}`] ? 
+                        style={{backgroundColor: addedPlayerDetails[`${detail}`] >= rosterDetails[`${detail}`] ? 
                         "lightGreen" : ''}}>
                         <b>{detail}</b>
                         {<br/>}
                         Total Needed: {rosterDetails[`${detail}`]}
                         {<br/>}
-                        Left To add: {rosterDetails[`${detail}`] - addedPlayerDetails[`${detail}`]}
+                        Left To add: {rosterDetails[`${detail}`] - addedPlayerDetails[`${detail}`] >= 0 ? 
+                        rosterDetails[`${detail}`] - addedPlayerDetails[`${detail}`] : 0}
                     </div>
                 )}
             })
@@ -132,10 +138,7 @@ function App() {
                     onClick={() => {
                         if (currentRoster.includes(player) && currentRoster.length < rosterDetails.Total) {
                             return}
-                        addPlayerToRoster(player)
-                        let newRoster = [...currentRoster]
-                        newRoster.push(player)
-                        setCurrentRoster(newRoster)}}
+                        modifyRoster(player, 'add')}}
                     >
                     <div>
                         <img
@@ -161,8 +164,7 @@ function App() {
                         src={player.profileImg}/>
                         <i className="times icon"
                             onClick={() => {
-                                let newRoster = currentRoster.filter(member => member.id !== player.id)
-                                setCurrentRoster(newRoster)
+                                modifyRoster(player, 'delete')
                             }}>
                         </i>
                     </div>
