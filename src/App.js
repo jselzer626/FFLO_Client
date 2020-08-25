@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import LoadingSpinner from './images/Loading_Spinner.gif'
+
 const details = ['type', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
 const flexPositions = ["WR", "TE", "RB"]
@@ -43,7 +45,6 @@ function App() {
     }
 
     const loadPlayerList = async () => {
-        //e.preventDefault()
 
         try {
             let playerList = await fetch('http://127.0.0.1:8000/players/loadInitial')
@@ -52,6 +53,7 @@ function App() {
         } catch(e) {
             console.warn(e)
         }
+
     }
     const renderRosterSelect = () => {
         return (
@@ -188,6 +190,7 @@ function App() {
             loadPlayerList()
             setLoading({...loading,initialLoading:false})
         }
+
         if (noResults.search) {
             return (
                 <div>
@@ -197,8 +200,6 @@ function App() {
         }
         if (filteredPlayerList.length === 0) {
             return (
-                //need to make this a scrollable box with a max height
-                //check semantic ui containers
                 <div>
                     <div className="ui items">
                         {fullPlayerList.map((player, index) => {
@@ -211,8 +212,6 @@ function App() {
         }
         else {
             return (
-                //need to make this a scrollable box with a max height
-                //check semantic ui containers
                 <div>
                     <div className="ui items">
                         {filteredPlayerList.map((player, index) => {
