@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
+import { Modal, Button } from 'semantic-ui-react'
 
 const details = ['type', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
 const flexPositions = ["WR", "TE", "RB"]
-const allPositions = ['QB', 'WR', 'TE', 'FLEX', 'K', 'DEF']
+const allPositions = ['QB', 'WR', 'RB', 'TE', 'FLEX', 'K', 'DEF']
+const specialDetails = ['type', 'Total', 'Bench']
 
 function App() {
 
@@ -54,8 +56,18 @@ function App() {
 
     }
     const renderRosterSelect = () => {
+
         return (
-            details.map(detail => {
+            <Modal
+              onClose={() => setShowRosterSelect(false)}
+              onOpen={() => setShowRosterSelect(true)}
+              open={showRosterSelect}
+              trigger={<Button primary>Edit Details</Button>}
+            >
+              <Modal.Header>Roster Details</Modal.Header>
+              <Modal.Content>
+                <Modal.Description>
+                {details.map(detail => {
                 if (detail === "type") {
                     return (
                         <div>
@@ -87,8 +99,18 @@ function App() {
                         />
                     </div>
                 )
-            })
-        )
+            })}
+                </Modal.Description>
+              </Modal.Content>
+              <Modal.Actions>
+                <Button onClick={() => setShowRosterSelect(false)} positive massive>
+                  Save Details
+                </Button>
+              </Modal.Actions>
+            </Modal>
+          )
+
+
     }
 
     const modifyRoster = (currentPlayer, action) => {
@@ -114,6 +136,29 @@ function App() {
     const renderRosterDetails = () => {
 
         return (
+                <div className="ui left fixed vertical menu"
+                    style={{"max-width": "20vw"}}
+                >
+                    {allPositions.map((pos) => {
+                        return (
+                            <div className="ui item tiny statistic"
+                            style={{backgroundColor: addedPlayerDetails[`${pos}`] >= rosterDetails[`${pos}`] ? 
+                            "lightGreen" : ''}}
+                            >
+                                <div className="label">
+                                    {pos}
+                                </div>
+                                <div className="value">
+                                    {rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] >= 0 ? 
+                                    rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] : 0}
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+        )
+        
+        /*return (
             details.map(detail => {
                 if (detail !== "type") {
                 return (
@@ -129,7 +174,7 @@ function App() {
                     </div>
                 )}
             })
-        )
+        )*/
     }
 
     const renderPlayerCard = (player, location="mainSearch") => {
@@ -243,9 +288,7 @@ function App() {
                 <div className="ui stackable three column grid">
                     <div className="four wide column ui raised segment">
                         Roster Details
-                        <div className="ui form">
-                            {renderRosterSelect()}
-                        </div>
+                        {renderRosterSelect()}
                         Players Currently Added
                         {renderRosterDetails()}
                     </div>
