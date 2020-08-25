@@ -62,7 +62,7 @@ function App() {
               onClose={() => setShowRosterSelect(false)}
               onOpen={() => setShowRosterSelect(true)}
               open={showRosterSelect}
-              trigger={<Button primary>Edit Details</Button>}
+              trigger={<Button primary small>Edit</Button>}
             >
               <Modal.Header>Roster Details</Modal.Header>
               <Modal.Content>
@@ -136,12 +136,16 @@ function App() {
     const renderRosterDetails = () => {
 
         return (
-                <div className="ui left fixed vertical menu"
-                    style={{"max-width": "20vw"}}
-                >
+                <div className="ui left fixed vertical menu" id="rosterDetailsMenu"
+                    style={{"max-width": "20vw", "margin-top": "6vh"}}
+                >   
+                    <div className="ui item" id="rosterDetailsHeader">
+                        <h3>Needed:</h3>
+                        {renderRosterSelect()}
+                    </div>
                     {allPositions.map((pos) => {
                         return (
-                            <div className="ui item tiny statistic"
+                            <div className="ui item tiny"
                             style={{backgroundColor: addedPlayerDetails[`${pos}`] >= rosterDetails[`${pos}`] ? 
                             "lightGreen" : ''}}
                             >
@@ -149,32 +153,14 @@ function App() {
                                     {pos}
                                 </div>
                                 <div className="value">
-                                    {rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] >= 0 ? 
-                                    rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] : 0}
+                                    <h3>{rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] >= 0 ? 
+                                    rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] : 0}</h3>
                                 </div>
                             </div>
                         )
                     })}
                 </div>
         )
-        
-        /*return (
-            details.map(detail => {
-                if (detail !== "type") {
-                return (
-                    <div
-                        style={{backgroundColor: addedPlayerDetails[`${detail}`] >= rosterDetails[`${detail}`] ? 
-                        "lightGreen" : ''}}>
-                        <b>{detail}</b>
-                        {<br/>}
-                        Total Needed: {rosterDetails[`${detail}`]}
-                        {<br/>}
-                        Left To add: {rosterDetails[`${detail}`] - addedPlayerDetails[`${detail}`] >= 0 ? 
-                        rosterDetails[`${detail}`] - addedPlayerDetails[`${detail}`] : 0}
-                    </div>
-                )}
-            })
-        )*/
     }
 
     const renderPlayerCard = (player, location="mainSearch") => {
@@ -284,12 +270,17 @@ function App() {
 
     return (
         <div className="App">
+            <div className="ui fixed top menu fluid"
+                style={{"backgroundColor": "forestGreen", "height": "5vh", 
+                    'borderBottom': "5px solid slategrey"}}>
+                <h1 style={{"color": "white", "margin": "0 auto"}}>
+                    FFLO
+                </h1>
+            </div>
             <div className="ui text container">
-                <div className="ui stackable three column grid">
+                <div className="ui stackable three column grid"
+                    style={{"padding-left": "20vw"}}>
                     <div className="four wide column ui raised segment">
-                        Roster Details
-                        {renderRosterSelect()}
-                        Players Currently Added
                         {renderRosterDetails()}
                     </div>
                     <div className="eight wide column">
