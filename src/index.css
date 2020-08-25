@@ -15,3 +15,8 @@ body {
 .image.tiny {
   margin: 0px;
 }
+
+.loadingContainer {
+  text-align: center;
+  margin-top: 75px;
+}

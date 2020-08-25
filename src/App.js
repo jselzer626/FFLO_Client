@@ -10,8 +10,6 @@ function App() {
 
     const [fullPlayerList, setFullPlayerList] = useState([])
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
-    const [input, setInput] = useState({playerSearch: ''})
-    const [loading, setLoading] = useState({initialLoading: true, loading: false})
     const [noResults, setNoResults] = useState({search: false, query: ''})
     const [currentRoster, setCurrentRoster] = useState([])
     const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 15, Bench: 5})
@@ -45,7 +43,6 @@ function App() {
     }
 
     const loadPlayerList = async () => {
-
         try {
             let playerList = await fetch('http://127.0.0.1:8000/players/loadInitial')
             let playerListJson = await playerList.json()
@@ -186,9 +183,14 @@ function App() {
 
     const renderPlayerList = () => {
 
-        if (loading.initialLoading) {
+        if (fullPlayerList.length === 0) {
             loadPlayerList()
-            setLoading({...loading,initialLoading:false})
+            return (
+                <div className="loadingContainer">
+                    <img src={LoadingSpinner}/>
+                    <h3>Loading Player List</h3>
+                </div>
+            )
         }
 
         if (noResults.search) {
