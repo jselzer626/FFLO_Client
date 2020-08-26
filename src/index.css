@@ -39,10 +39,20 @@ body {
   color: white;
   margin: 0 auto;
 }
+.currentRosterDisplay {
+  padding-left: 20vw;
+  height: 20vh;
+  display: flex;
+  justify-content: start;
+  overflow-x: scroll;
+}
 
+.currentRosterDisplay > .item {
+  min-width: 100px;
+}
 @media screen and (max-width: 600px) {
   #rosterDetailsMenu > .item {
-    padding-bottom: 2px;
+    padding-bottom: 4px;
     margin: 0 auto;
     text-align: center;
   }

@@ -144,6 +144,10 @@ function App() {
                         <h3>Needed:</h3>
                         {renderRosterSelect()}
                     </div>
+                    <div className="ui item tiny">
+                        <div className="label">League</div>
+                        <div className="value">{rosterDetails.type}</div>
+                    </div>
                     {details.map((pos) => {
                         if (pos !== "type") {
                             return (
@@ -206,9 +210,6 @@ function App() {
                         <div className="header">
                             {player.displayName}
                         </div>
-                        <div className="description">
-                            {player.position} {player.team}
-                        </div>
                     </div>
                 </div>
             )  
@@ -264,7 +265,7 @@ function App() {
         return (   
                 currentRoster.map((player) => {
                 return (
-                    <div className="ui item">
+                    <div className="ui item tiny">
                     {renderPlayerCard(player, "sideBar")}
                     </div>
                     )
@@ -282,7 +283,7 @@ function App() {
                         {renderInputForm()}
                         {renderPlayerList()}
                 </div>
-                <div>
+                <div className="currentRosterDisplay">
                     {renderRoster()}
                 </div>
             </div>
