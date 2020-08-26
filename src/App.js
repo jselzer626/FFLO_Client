@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
 import { Modal, Button } from 'semantic-ui-react'
 
-const details = ['type', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
+const details = ['type', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
 const flexPositions = ["WR", "TE", "RB"]
 const allPositions = ['QB', 'WR', 'RB', 'TE', 'FLEX', 'K', 'DEF']
@@ -143,10 +143,6 @@ function App() {
                     <div className="ui item" id="rosterDetailsHeader">
                         <h3>Needed:</h3>
                         {renderRosterSelect()}
-                    </div>
-                    <div className="ui item tiny">
-                        <div className="label">League</div>
-                        <div className="value">{rosterDetails.type}</div>
                     </div>
                     {details.map((pos) => {
                         if (pos !== "type") {
