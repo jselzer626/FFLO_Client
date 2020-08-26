@@ -68,39 +68,48 @@ function App() {
               <Modal.Header>Roster Details</Modal.Header>
               <Modal.Content>
                 <Modal.Description>
-                {details.map(detail => {
-                if (detail === "type") {
-                    return (
-                        <div>
-                            {detail}
-                            {<br/>}
-                            {leagueTypes.map(leagueType => {
-                                return (
-                                    <button className="ui button small blue"
-                                    onClick = {() => 
-                                        {let newDetails = {...rosterDetails, type: leagueType}
-                                        setRosterDetails(newDetails)}
-                                    }>{leagueType}</button>
-                                )
-                            })}
+                    <div className="ui form two column grid">
+                        {details.map(detail => {
+                        if (detail === "type") {
+                            return (
+                                <div className="row">
+                                    <div className="column four wide">
+                                        {detail}
+                                    </div>
+                                    <div className="column twelve wide">
+                                    {leagueTypes.map(leagueType => {
+                                        return (
+                                            <button className="ui button small blue"
+                                            onClick = {() => 
+                                                {let newDetails = {...rosterDetails, type: leagueType}
+                                                setRosterDetails(newDetails)}
+                                            }>{leagueType}</button>
+                                        )
+                                    })}
+                                    </div>
 
-                        </div>
-                    )
-                }
-                return (
-                    <div className="{'inline field'}">
-                        {detail}
-                        <input
-                            type="text"
-                            value={rosterDetails[`${detail}`]}
-                            onChange={(e) => {
-                                let newDetails = {...rosterDetails, [detail]: parseInt(e.currentTarget.value)}
-                                setRosterDetails(newDetails)
-                            }}
-                        />
+                                </div>
+                            )
+                        }
+                        return (
+                            <div className="row">
+                                <div className="column four wide">
+                                    {detail}
+                                </div>
+                                <div className="column twelve wide">
+                                    <input
+                                        type="text"
+                                        value={rosterDetails[`${detail}`]}
+                                        onChange={(e) => {
+                                            let newDetails = {...rosterDetails, [detail]: parseInt(e.currentTarget.value)||''}
+                                            setRosterDetails(newDetails)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        )
+                    })}
                     </div>
-                )
-            })}
                 </Modal.Description>
               </Modal.Content>
               <Modal.Actions>
@@ -285,7 +294,6 @@ function App() {
                                 {renderInputForm()}
                                 <div id="searchOptions">
                                     <h3>All Players</h3>
-                                    <button className="ui button floating labeled search dropdown">Filter</button>
                                 </div>
                                 {renderPlayerList()}
                         </div>
@@ -293,6 +301,7 @@ function App() {
                     <div className="column six wide">
                         <h3>My Team:</h3>
                         <div className="currentRosterDisplay">
+                            {currentRoster.length === 0 ? "No one yet" : ''}
                             {renderRoster()}
                         </div>
                     </div>

@@ -34,6 +34,9 @@ body {
   order: 2;
 }
 
+div.ui.form.two.column.grid > .row {
+  padding-top: 0px;
+}
 
 #playerSearch {
   padding-top: 2vh;
