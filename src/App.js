@@ -37,6 +37,7 @@ function App() {
         return (
             <div className = "ui form">
                 <input className = "ui input"
+                    placeholder="Begin typing a player name"
                     type="text"
                     onChange={handleInputChange}
                 >
@@ -143,21 +144,22 @@ function App() {
                         <h3>Needed:</h3>
                         {renderRosterSelect()}
                     </div>
-                    {allPositions.map((pos) => {
-                        return (
-                            <div className="ui item tiny"
-                            style={{backgroundColor: addedPlayerDetails[`${pos}`] >= rosterDetails[`${pos}`] ? 
-                            "lightGreen" : ''}}
-                            >
-                                <div className="label">
-                                    {pos}
+                    {details.map((pos) => {
+                        if (pos !== "type") {
+                            return (
+                                <div className="ui item tiny"
+                                style={{backgroundColor: addedPlayerDetails[`${pos}`] >= rosterDetails[`${pos}`] ? 
+                                "lightGreen" : ''}}
+                                >
+                                    <div className="label">
+                                        {pos}
+                                    </div>
+                                    <div className="value">
+                                        <h3>{rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] >= 0 ? 
+                                        rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] : 0}</h3>
+                                    </div>
                                 </div>
-                                <div className="value">
-                                    <h3>{rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] >= 0 ? 
-                                    rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] : 0}</h3>
-                                </div>
-                            </div>
-                        )
+                            )}
                     })}
                 </div>
         )
@@ -259,38 +261,29 @@ function App() {
     }
 
     const renderRoster = () => {
-        return (
-            currentRoster.map((player) => {
-                return renderPlayerCard(player, "sideBar")
-            })
+        return (   
+                currentRoster.map((player) => {
+                return (
+                    <div className="ui item">
+                    {renderPlayerCard(player, "sideBar")}
+                    </div>
+                    )
+                })
         )
-    
+   
     }
 
 
     return (
         <div className="App">
-            <div className="ui fixed top menu fluid"
-                style={{"backgroundColor": "forestGreen", "height": "5vh", 
-                    'borderBottom': "5px solid slategrey"}}>
-                <h1 style={{"color": "white", "margin": "0 auto"}}>
-                    FFLO
-                </h1>
-            </div>
             <div className="ui text container">
-                <div className="ui stackable three column grid"
-                    style={{"padding-left": "20vw"}}>
-                    <div className="four wide column ui raised segment">
-                        {renderRosterDetails()}
-                    </div>
-                    <div className="eight wide column">
+                {renderRosterDetails()}
+                <div id="playerSearch">
                         {renderInputForm()}
                         {renderPlayerList()}
-                    </div>
-                    <div className="four wide column">
-                        My team
-                        {renderRoster()}
-                    </div>
+                </div>
+                <div>
+                    {renderRoster()}
                 </div>
             </div>
         </div>
