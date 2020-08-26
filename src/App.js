@@ -168,7 +168,7 @@ function App() {
     const renderPlayerCard = (player, location="mainSearch") => {
         if (location==="mainSearch") {
             return (
-                <div className="item"
+                <div className="playerSearchProfile"
                     onClick={() => {
                         if (currentRoster.includes(player) && currentRoster.length < rosterDetails.Total) {
                             return}
@@ -181,7 +181,7 @@ function App() {
                     </div>
                     <div className="content">
                         <div className="header">
-                            {player.displayName}
+                            <b>{player.displayName}</b>
                         </div>
                         <div className="description">
                             {player.position} {player.team}
@@ -274,13 +274,28 @@ function App() {
     return (
         <div className="App">
             <div className="ui text container">
-                {renderRosterDetails()}
-                <div id="playerSearch">
-                        {renderInputForm()}
-                        {renderPlayerList()}
-                </div>
-                <div className="currentRosterDisplay">
-                    {renderRoster()}
+                {renderRosterDetails()} 
+                <div className="ui two column grid stackable"
+                    id="playerSearch">
+                    <div className="column ten wide fullList">
+                        <div>   
+                                <h3
+                                style={{"margin-bottom": "1vh", "text-align": "center"}}
+                                >Build/Edit Roster</h3>
+                                {renderInputForm()}
+                                <div id="searchOptions">
+                                    <h3>All Players</h3>
+                                    <button className="ui button floating labeled search dropdown">Filter</button>
+                                </div>
+                                {renderPlayerList()}
+                        </div>
+                    </div>
+                    <div className="column six wide">
+                        <h3>My Team:</h3>
+                        <div className="currentRosterDisplay">
+                            {renderRoster()}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

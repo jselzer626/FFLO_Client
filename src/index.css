@@ -4,7 +4,7 @@ body {
   }
   
 .items {
-  height: 60vh;
+  height: 50vh;
   overflow: scroll;
 }
 
@@ -25,8 +25,28 @@ body {
   margin-top: 75px;
 }
 
+#searchOptions {
+  display: flex;
+}
+
+#searchOptions button {
+  margin-left: auto;
+  order: 2;
+}
+
+
 #playerSearch {
-  padding-top: 7vh;
+  padding-top: 2vh;
+}
+
+#playerSearch input {
+  margin-bottom: 1vh;
+}
+
+.playerSearchProfile {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  display: flex;
+  padding: 6px;
 }
 
 .nav {
@@ -40,16 +60,19 @@ body {
   margin: 0 auto;
 }
 .currentRosterDisplay {
-  padding-left: 20vw;
-  height: 20vh;
   display: flex;
+  flex-wrap: wrap;
   justify-content: start;
-  overflow-x: scroll;
 }
 
 .currentRosterDisplay > .item {
-  min-width: 100px;
+  width: 50%;
 }
+
+.item > .segment {
+  height: 100%;
+}
+
 @media screen and (max-width: 600px) {
   #rosterDetailsMenu > .item {
     padding-bottom: 4px;
