@@ -63,7 +63,8 @@ function App() {
               onClose={() => setShowRosterSelect(false)}
               onOpen={() => setShowRosterSelect(true)}
               open={showRosterSelect}
-              trigger={<Button primary small>Edit</Button>}
+              trigger={<p id="parametersChange">Parameters<i className="settings icon"></i></p>}
+              //trigger={<Button primary small>Edit</Button>}
             >
               <Modal.Header>Roster Details</Modal.Header>
               <Modal.Content>

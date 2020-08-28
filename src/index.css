@@ -1,5 +1,6 @@
 body {
     font: 14px "Century Gothic", Futura, sans-serif;
+    min-height: 100vh;
   }
   
 .items {
@@ -7,9 +8,13 @@ body {
   overflow: scroll;
 }
 
+.container {
+  overflow: auto;
+}
+
 .App {
   background-color: gainsboro;
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 .times {
@@ -20,6 +25,17 @@ body {
   margin: 0px;
 }
 
+.ui.dropdown.icon {
+  color: gray;
+}
+
+#parametersChange {
+  color: gray;
+  cursor: pointer;
+}
+#parametersChange i {
+  margin-left: 3px;
+}
 #rosterPositionContainer {
   height: 100%;
   display: flex;
