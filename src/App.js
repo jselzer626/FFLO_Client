@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
 import { Modal, Button, Dropdown } from 'semantic-ui-react'
+import { render } from 'react-dom'
 
 const details = ['type', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
@@ -17,7 +18,33 @@ function App() {
     const [currentRoster, setCurrentRoster] = useState([])
     const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 15, Bench: 5})
     const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
-    //const [step, setStep] = ({playerList: 100})
+    const [loading, setLoading] = useState(false)
+    const [hasError, setHasError] = useState(false)
+
+    useEffect(() => {
+        setLoading(true)
+        fetch('http://127.0.0.1:8000/players/loadInitial').then(
+            async(res) => {
+                let playerList = await res.json()
+
+                playerList.sort((playerA, playerB) => {
+                    return playerA.standardRanking - playerB.standardRanking
+                })
+
+                setFullPlayerList(playerList)
+                setLoading(false)
+            }
+        ).catch(e => {
+            setHasError(true)
+            setLoading(false)
+        })
+
+    }, [])
+
+
+
+
+
 
     const handleInputChange = e => {
         setNoResults({...noResults, search: false})
@@ -46,16 +73,6 @@ function App() {
         )
     }
 
-    const loadPlayerList = async () => {
-        try {
-            let playerList = await fetch('http://127.0.0.1:8000/players/loadInitial')
-            let playerListJson = await playerList.json()
-            setFullPlayerList(playerListJson)
-        } catch(e) {
-            console.warn(e)
-        }
-
-    }
     const renderRosterSelect = () => {
 
         return (
@@ -251,18 +268,16 @@ function App() {
 
         }
     }
+    const renderLoadingGraphic = () => {
+        return (
+            <div className="loadingContainer">
+                <img src={LoadingSpinner}/>
+                <h3>Loading Player List</h3>
+            </div>
+        )
+    }
 
     const renderPlayerList = () => {
-
-        if (fullPlayerList.length === 0) {
-            loadPlayerList()
-            return (
-                <div className="loadingContainer">
-                    <img src={LoadingSpinner}/>
-                    <h3>Loading Player List</h3>
-                </div>
-            )
-        }
 
         if (noResults.search) {
             return (
@@ -342,7 +357,7 @@ function App() {
                                     <h3>All Players</h3>
                                     {renderFilter()}
                                 </div>
-                                {renderPlayerList()}
+                                {loading ? renderLoadingGraphic() : renderPlayerList()}
                         </div>
                     </div>
                     <div className="column six wide">

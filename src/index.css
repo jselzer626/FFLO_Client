@@ -10,6 +10,14 @@ body {
 
 .container {
   overflow: auto;
+  min-height: 90vh;
+}
+.container > .grid {
+  min-height: 85vh;
+}
+
+.grid > .column {
+  min-height: 100%;
 }
 
 .App {
@@ -81,6 +89,7 @@ div.ui.form.two.column.grid > .row {
 }
 
 .nav {
+  text-align: center;
   background-color: darkgreen;
   height: 5vh;
   border-bottom: 2px solid slategrey;
