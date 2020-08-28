@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
-import { Modal, Button } from 'semantic-ui-react'
+import { Modal, Button, Dropdown } from 'semantic-ui-react'
 
 const details = ['type', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
@@ -123,6 +123,30 @@ function App() {
 
     }
 
+    const renderFilter = () => {
+        return (
+            <Dropdown
+                text="Filter"
+                icon="filter"
+                className="icon"
+            >
+                <Dropdown.Menu>
+                    <Dropdown.Menu scrolling>
+                        {allPositions.map((pos) => {
+                            return (
+                                <Dropdown.Item
+                                    key={pos}
+                                    text={pos}
+                                    onClick={() => setFilteredPlayerList(fullPlayerList.filter((player) => player.position === pos))}
+                            />
+                            )
+                        })}
+                    </Dropdown.Menu>
+                </Dropdown.Menu>
+            </Dropdown>
+        )
+
+    }
     const modifyRoster = (currentPlayer, action) => {
 
         let newRoster = [...currentRoster]
@@ -315,12 +339,16 @@ function App() {
                                 {renderInputForm()}
                                 <div id="searchOptions">
                                     <h3>All Players</h3>
+                                    {renderFilter()}
                                 </div>
                                 {renderPlayerList()}
                         </div>
                     </div>
                     <div className="column six wide">
-                        <h3>My Team:</h3>
+                        <div id="searchOptions">
+                            <h3>My Team:</h3>
+                            {renderRosterSelect()}
+                        </div>
                         <div id="rosterPositionContainer">
                             {renderRoster()}
                         </div>

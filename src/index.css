@@ -39,11 +39,8 @@ body {
 
 #searchOptions {
   display: flex;
-}
-
-#searchOptions button {
-  margin-left: auto;
-  order: 2;
+  justify-content: space-between;
+  border-bottom: 1px solid gainsboro;
 }
 
 div.ui.form.two.column.grid > .row {
@@ -56,6 +53,10 @@ div.ui.form.two.column.grid > .row {
 
 #playerSearch input {
   margin-bottom: 1vh;
+}
+
+.fullList {
+  border-right: 1px solid gainsboro;
 }
 
 .playerSearchProfile {
@@ -91,6 +92,10 @@ div.ui.form.two.column.grid > .row {
 
 
 @media screen and (max-width: 600px) {
+  .fullList {
+    border-right: none;
+    border-bottom: 1px solid gainsboro;
+  }
   .items {
     height: 40vh;
   }
