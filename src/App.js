@@ -281,11 +281,14 @@ function App() {
 
             allPositions.map((pos) => {
                 return ( 
-                    <div>
-                        <h1>{pos}</h1>
-                        <h3>{addedPlayerDetails[`${pos}`] > rosterDetails[`${pos}`] ? 
-                        rosterDetails[`${pos}`] : addedPlayerDetails[`${pos}`]} of 
-                        {rosterDetails[`${pos}`]} added</h3>
+                    <div className="rosterDisplayContainer">
+                        <div className="currentRosterDisplay"
+                        id="positionCounter">
+                                <h2>{pos}</h2>
+                                <p>{addedPlayerDetails[`${pos}`] > rosterDetails[`${pos}`] ? 
+                                rosterDetails[`${pos}`] : addedPlayerDetails[`${pos}`]} of {rosterDetails[`${pos}`]} added</p>
+                        </div>
+                        <div className="currentRosterDisplay">
                         {currentRoster.filter((player) => player.position === pos).map((player) => {
                             return (
                                 <div className="ui item tiny">
@@ -293,6 +296,7 @@ function App() {
                                 </div>
                             )
                         })}
+                        </div>
                     </div>
                 )
             })
@@ -305,8 +309,7 @@ function App() {
 
     return (
         <div className="App">
-            <div className="ui text container">
-                {renderRosterDetails()} 
+            <div className="ui text container"> 
                 <div className="ui two column grid stackable"
                     id="playerSearch">
                     <div className="column ten wide fullList">
@@ -323,8 +326,7 @@ function App() {
                     </div>
                     <div className="column six wide">
                         <h3>My Team:</h3>
-                        <div className="currentRosterDisplay">
-                            {currentRoster.length === 0 ? "No one yet" : ''}
+                        <div>
                             {renderRoster()}
                         </div>
                     </div>

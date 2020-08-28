@@ -4,7 +4,7 @@ body {
   }
   
 .items {
-  height: 50vh;
+  height: 70vh;
   overflow: scroll;
 }
 
@@ -62,10 +62,11 @@ div.ui.form.two.column.grid > .row {
   color: white;
   margin: 0 auto;
 }
+
 .currentRosterDisplay {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: space-between;
 }
 
 .currentRosterDisplay > .item {
@@ -76,7 +77,16 @@ div.ui.form.two.column.grid > .row {
   height: 100%;
 }
 
+.rosterDisplayContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 @media screen and (max-width: 600px) {
+  .items {
+    height: 40vh;
+  }
   #rosterDetailsMenu > .item {
     padding-bottom: 4px;
     margin: 0 auto;
@@ -85,8 +95,5 @@ div.ui.form.two.column.grid > .row {
   #rosterDetailsHeader {
     padding-left: 5px;
     padding-bottom: 5px;
-  }
-  #playerSearch {
-    padding-left: 20vw;
   }
 }
