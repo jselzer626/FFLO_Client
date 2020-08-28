@@ -9,6 +9,7 @@ body {
 }
 
 .App {
+  background-color: gainsboro;
   min-height: 100%;
 }
 
@@ -18,6 +19,17 @@ body {
 
 .image.tiny {
   margin: 0px;
+}
+
+#rosterPositionContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+#positionCounter {
+  border-bottom: 1px solid gainsboro;
 }
 
 .loadingContainer {
@@ -54,7 +66,7 @@ div.ui.form.two.column.grid > .row {
 
 .nav {
   background-color: darkgreen;
-  height: 6vh;
+  height: 5vh;
   border-bottom: 2px solid slategrey;
 }
 
@@ -77,15 +89,13 @@ div.ui.form.two.column.grid > .row {
   height: 100%;
 }
 
-.rosterDisplayContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 
 @media screen and (max-width: 600px) {
   .items {
     height: 40vh;
+  }
+  .nav {
+    height: 6vh;
   }
   #rosterDetailsMenu > .item {
     padding-bottom: 4px;

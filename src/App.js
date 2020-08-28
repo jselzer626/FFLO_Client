@@ -182,6 +182,8 @@ function App() {
                         if (currentRoster.includes(player) && currentRoster.length < rosterDetails.Total) {
                             return}
                         modifyRoster(player, 'add')}}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = "gainsboro"}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
                     >
                     <div>
                         <img
@@ -200,7 +202,10 @@ function App() {
             )   
         } else {
             return (
-                <div className="ui segment raised">
+                <div className="ui segment raised"
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = "gainsboro"}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
+                    >
                     <div>
                         <img
                         className='ui image tiny' 
@@ -267,16 +272,6 @@ function App() {
     }
 
     const renderRoster = () => {
-        /*return (   
-                currentRoster.map((player) => {
-                return (
-                    <div className="ui item tiny">
-                    {renderPlayerCard(player, "sideBar")}
-                    </div>
-                    )
-                })
-        )*/
-
         return (
 
             allPositions.map((pos) => {
@@ -309,7 +304,7 @@ function App() {
 
     return (
         <div className="App">
-            <div className="ui text container"> 
+            <div className="ui text container raised segment"> 
                 <div className="ui two column grid stackable"
                     id="playerSearch">
                     <div className="column ten wide fullList">
@@ -326,7 +321,7 @@ function App() {
                     </div>
                     <div className="column six wide">
                         <h3>My Team:</h3>
-                        <div>
+                        <div id="rosterPositionContainer">
                             {renderRoster()}
                         </div>
                     </div>
