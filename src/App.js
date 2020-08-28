@@ -155,7 +155,11 @@ function App() {
                                 <Dropdown.Item
                                     key={pos}
                                     text={pos}
-                                    onClick={() => setFilteredPlayerList(fullPlayerList.filter((player) => player.position === pos))}
+                                    onClick={() => {
+                                        setLoading(true)
+                                        setFilteredPlayerList(fullPlayerList.filter((player) => player.position === pos))
+                                        setLoading(false)
+                                    }}
                             />
                             )
                         })}

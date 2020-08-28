@@ -72,6 +72,8 @@ div.ui.form.two.column.grid > .row {
 
 #playerSearch {
   padding-top: 2vh;
+  padding-bottom: 2vh;
+  overflow: hidden;
 }
 
 #playerSearch input {
