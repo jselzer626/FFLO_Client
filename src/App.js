@@ -23,7 +23,7 @@ function App() {
 
     useEffect(() => {
         setLoading(true)
-        fetch('http://fflo-server.herokuapp.com/players/loadInitial').then(
+        fetch('https://fflo-server.herokuapp.com/players/loadInitial').then(
             async(res) => {
                 let playerList = await res.json()
 
