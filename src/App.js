@@ -267,7 +267,7 @@ function App() {
     }
 
     const renderRoster = () => {
-        return (   
+        /*return (   
                 currentRoster.map((player) => {
                 return (
                     <div className="ui item tiny">
@@ -275,6 +275,29 @@ function App() {
                     </div>
                     )
                 })
+        )*/
+
+        return (
+
+            allPositions.map((pos) => {
+                return ( 
+                    <div>
+                        <h1>{pos}</h1>
+                        <h3>{addedPlayerDetails[`${pos}`] > rosterDetails[`${pos}`] ? 
+                        rosterDetails[`${pos}`] : addedPlayerDetails[`${pos}`]} of 
+                        {rosterDetails[`${pos}`]} added</h3>
+                        {currentRoster.filter((player) => player.position === pos).map((player) => {
+                            return (
+                                <div className="ui item tiny">
+                                {renderPlayerCard(player, "sideBar")}
+                                </div>
+                            )
+                        })}
+                    </div>
+                )
+            })
+
+
         )
    
     }
