@@ -172,6 +172,10 @@ function App() {
         let newDetails = {QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0}
         action === "add" ? newRoster.Total.push(currentPlayer) : newRoster.Total = newRoster.Total.filter(player => player !== currentPlayer)
         
+        let rankingType = rosterDetails.type === "Standard" ? "standardRanking" : "pprRanking"
+        //sort players so highest ranked automatically get sent to starting positions
+        newRoster.Total.sort((playerA, playerB) => {return playerA[`${rankingType}`] - playerB[`${rankingType}`]} )
+
         newRoster.Total.forEach(player => {
 
             if (newDetails[`${player.position}`] >= rosterDetails[`${player.position}`]) {
