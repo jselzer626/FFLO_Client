@@ -6,7 +6,7 @@ import { render } from 'react-dom'
 const details = ['type', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
 const flexPositions = ["WR", "TE", "RB"]
-const allPositions = ['QB', 'WR', 'RB', 'TE', 'FLEX', 'K', 'DEF']
+const allPositions = ['QB', 'WR', 'RB', 'TE', 'FLEX', 'K', 'DEF', 'Bench']
 const specialDetails = ['type', 'Total', 'Bench']
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
     const [showRosterSelect, setShowRosterSelect] = useState(false)
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
     const [noResults, setNoResults] = useState({search: false, query: ''})
-    const [currentRoster, setCurrentRoster] = useState([])
+    const [currentRoster, setCurrentRoster] = useState({RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Total: [], Bench: []})
     const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 15, Bench: 5})
     const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
     const [loading, setLoading] = useState(false)
@@ -40,11 +40,6 @@ function App() {
         })
 
     }, [])
-
-
-
-
-
 
     const handleInputChange = e => {
         setNoResults({...noResults, search: false})
@@ -171,53 +166,34 @@ function App() {
     }
     const modifyRoster = (currentPlayer, action) => {
 
-        let newRoster = [...currentRoster]
-        let newDetails = {...addedPlayerDetails}
-        action === "add" ? newRoster.push(currentPlayer) : newRoster = newRoster.filter(player => player !== currentPlayer)
-        let requiredStarters = 0
-        allPositions.forEach(pos => {
-            newDetails[`${pos}`] = newRoster.filter(player => player.position === pos).length
-            requiredStarters += rosterDetails[`${pos}`]
-        })
-        newDetails.Total = currentRoster.length
-        if (newDetails.Total > requiredStarters) {
-            newDetails.Bench = newDetails.Total - requiredStarters
-        }
+        //recalculating each time
+        //total is the only sublist that gets kept
+        let newRoster = {...currentRoster, RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Bench: []}
+        let newDetails = {QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0}
+        action === "add" ? newRoster.Total.push(currentPlayer) : newRoster.Total = newRoster.Total.filter(player => player !== currentPlayer)
         
+        newRoster.Total.forEach(player => {
+
+            if (newDetails[`${player.position}`] >= rosterDetails[`${player.position}`]) {
+
+                if (flexPositions.includes(player.position) && newDetails.FLEX < rosterDetails.FLEX){
+                    newRoster.FLEX.push(player)
+                    newDetails.FLEX++
+                } else {
+                    newRoster.Bench.push(player)
+                    newDetails.Bench++
+                }
+            } else {
+                newRoster[`${player.position}`].push(player)
+                newDetails[`${player.position}`]++
+            }
+                newDetails.Total++
+            
+        })
+
         setCurrentRoster(newRoster)
         setAddedPlayerDetails(newDetails)
 
-    }
-
-    const renderRosterDetails = () => {
-
-        return (
-                <div className="ui left fixed vertical menu" id="rosterDetailsMenu"
-                    style={{"max-width": "20vw", "margin-top": "6vh"}}
-                >   
-                    <div className="ui item" id="rosterDetailsHeader">
-                        <h3>Needed:</h3>
-                        {renderRosterSelect()}
-                    </div>
-                    {details.map((pos) => {
-                        if (pos !== "type") {
-                            return (
-                                <div className="ui item tiny"
-                                style={{backgroundColor: addedPlayerDetails[`${pos}`] >= rosterDetails[`${pos}`] ? 
-                                "lightGreen" : ''}}
-                                >
-                                    <div className="label">
-                                        {pos}
-                                    </div>
-                                    <div className="value">
-                                        <h3>{rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] >= 0 ? 
-                                        rosterDetails[`${pos}`] - addedPlayerDetails[`${pos}`] : 0}</h3>
-                                    </div>
-                                </div>
-                            )}
-                    })}
-                </div>
-        )
     }
 
     const renderPlayerCard = (player, location="mainSearch") => {
@@ -225,7 +201,7 @@ function App() {
             return (
                 <div className="playerSearchProfile"
                     onClick={() => {
-                        if (currentRoster.includes(player) && currentRoster.length < rosterDetails.Total) {
+                        if (currentRoster.Total.includes(player) && currentRoster.length < rosterDetails.Total) {
                             return}
                         modifyRoster(player, 'add')}}
                     onMouseEnter={e => e.currentTarget.style.backgroundColor = "gainsboro"}
@@ -328,7 +304,7 @@ function App() {
                                 rosterDetails[`${pos}`] : addedPlayerDetails[`${pos}`]} of {rosterDetails[`${pos}`]} added</p>
                         </div>
                         <div className="currentRosterDisplay">
-                        {currentRoster.filter((player) => player.position === pos).map((player) => {
+                        {currentRoster[`${pos}`].map((player) => {
                             return (
                                 <div className="ui item tiny">
                                 {renderPlayerCard(player, "sideBar")}
