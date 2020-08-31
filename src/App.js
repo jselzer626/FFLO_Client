@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
+import fieldImg from './images/field.jpg'
 import { Modal, Button, Dropdown } from 'semantic-ui-react'
 import { render } from 'react-dom'
 
@@ -20,6 +21,7 @@ function App() {
     const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
+    const [startPage, setStartPage] = useState(true)
 
     useEffect(() => {
         setLoading(true)
@@ -64,6 +66,25 @@ function App() {
                     onChange={handleInputChange}
                 >
                 </input>
+            </div>
+        )
+    }
+
+    const showStartPage = () => {
+        return (
+            <div className="startMenu">
+                <div>
+                        <button className="large fluid ui button primary"
+                            onClick={() => setStartPage(false)}
+                        >Retrieve Existing Lineup
+                        </button>   
+                    </div>
+                    <div>
+                        <button className="large fluid ui button primary"
+                            onClick={() => setStartPage(false)}
+                        >Create New Lineup
+                        </button>
+                    </div>
             </div>
         )
     }
@@ -146,17 +167,23 @@ function App() {
                 <Dropdown.Menu>
                     <Dropdown.Menu scrolling>
                         {allPositions.map((pos) => {
-                            return (
-                                <Dropdown.Item
-                                    key={pos}
-                                    text={pos}
-                                    onClick={() => {
-                                        setLoading(true)
-                                        setFilteredPlayerList(fullPlayerList.filter((player) => player.position === pos))
-                                        setLoading(false)
-                                    }}
-                            />
-                            )
+                            if (pos !== "Bench") {
+                                return (
+                                    <Dropdown.Item
+                                        key={pos}
+                                        text={pos}
+                                        onClick={() => {
+                                            setLoading(true)
+                                            if (pos === "FLEX") {
+                                                setFilteredPlayerList(fullPlayerList.filter((player) => flexPositions.includes(player.position)).filter((player, index) => index < 100))
+                                            } else {
+                                                setFilteredPlayerList(fullPlayerList.filter((player) => player.position === pos).filter((player, index) => index < 100))
+                                            }
+                                            setLoading(false)
+                                        }}
+                                />
+                                )
+                            }
                         })}
                     </Dropdown.Menu>
                 </Dropdown.Menu>
@@ -205,10 +232,11 @@ function App() {
             return (
                 <div className="playerSearchProfile"
                     onClick={() => {
-                        if (currentRoster.Total.includes(player) && currentRoster.length < rosterDetails.Total) {
+                        if (currentRoster.Total.includes(player)) {
                             return}
                         modifyRoster(player, 'add')}}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = "gainsboro"}
+                    //only for desktop
+                    onMouseEnter={e => window.screen.width > 400 ? e.currentTarget.style.backgroundColor = "gainsboro" : ''}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
                     >
                     <div>
@@ -232,11 +260,11 @@ function App() {
                     onMouseEnter={e => e.currentTarget.style.backgroundColor = "gainsboro"}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
                     >
-                    <div>
+                    <div style={{"display": "flex"}}>
                         <img
                         className='ui image tiny' 
                         src={player.profileImg}/>
-                        <i className="times icon"
+                        <i className="times icon large"
                             onClick={() => {
                                 modifyRoster(player, 'delete')
                             }}>
@@ -297,15 +325,21 @@ function App() {
 
     const renderRoster = () => {
         return (
+            /*OLD
+            <p>{addedPlayerDetails[`${pos}`] >= rosterDetails[`${pos}`] ? 
+                                rosterDetails[`${pos}`] : addedPlayerDetails[`${pos}`]} of {rosterDetails[`${pos}`]} added</p>
+            */
 
             allPositions.map((pos) => {
                 return ( 
                     <div className="rosterDisplayContainer">
                         <div className="currentRosterDisplay"
                         id="positionCounter">
-                                <h2>{pos}</h2>
-                                <p>{addedPlayerDetails[`${pos}`] > rosterDetails[`${pos}`] ? 
-                                rosterDetails[`${pos}`] : addedPlayerDetails[`${pos}`]} of {rosterDetails[`${pos}`]} added</p>
+                                <h2>{pos}<i className="check circle icon green"
+                                style={{"display": addedPlayerDetails[`${pos}`] === rosterDetails[`${pos}`] ? "inline-block" : "none"}}
+                                    ></i></h2>
+                                <p>{addedPlayerDetails[`${pos}`]} of {rosterDetails[`${pos}`]} added</p>
+                                 
                         </div>
                         <div className="currentRosterDisplay">
                         {currentRoster[`${pos}`].map((player) => {
@@ -328,13 +362,14 @@ function App() {
 
     return (
         <div className="App">
-            <div className="ui text container raised segment"> 
+            <div className="ui text container raised segment">
+                { startPage ? showStartPage() : 
                 <div className="ui two column grid stackable"
                     id="playerSearch">
                     <div className="column ten wide fullList">
                         <div>   
                                 <h3
-                                style={{"margin-bottom": "1vh", "text-align": "center"}}
+                                style={{"marginBottom": "1vh", "textAlign": "center"}}
                                 >Build/Edit Roster</h3>
                                 {renderInputForm()}
                                 <div id="searchOptions">
@@ -353,7 +388,7 @@ function App() {
                             {renderRoster()}
                         </div>
                     </div>
-                </div>
+                </div> }
             </div>
         </div>
     )
