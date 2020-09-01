@@ -26,15 +26,29 @@ body {
 }
 
 .startMenu {
-  height: 85vh;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  background-image: url('./images/field.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./images/field.jpg');
   background-size: cover;
+  min-height: 85vh;
 }
-.startMenu div {
-  margin-top: 10vh;
+
+div.startMenu h1 {
+  text-align: center;
+  padding: 5vh;
+  color: white;
+}
+
+.startMenuButtons {
+  padding-top: 45vh;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+div.startMenuButtons a {
+  color: white;
+}
+
+.button.primary {
+  margin-top: 40%;
 }
 
 .image.tiny {
@@ -42,11 +56,11 @@ body {
 }
 
 .ui.dropdown.icon {
-  color: gray;
+  color: silver;
 }
 
 #parametersChange {
-  color: gray;
+  color: silver;
   cursor: pointer;
 }
 #parametersChange i {
@@ -68,6 +82,9 @@ body {
   margin-top: 75px;
 }
 
+div.description {
+  color: gray;
+}
 #searchOptions {
   display: flex;
   justify-content: space-between;
@@ -103,6 +120,10 @@ div.ui.form.two.column.grid > .row {
   background-color: darkgreen;
   height: 5vh;
   border-bottom: 2px solid slategrey;
+}
+
+#listSpacer {
+  display: none;
 }
 
 .nav h1 {
@@ -148,5 +169,14 @@ div.ui.form.two.column.grid > .row {
   .currentRosterDisplay{
     padding-left: 5vw;
     padding-right: 5vw
+  }
+  #listSpacer {
+    display: block;
+    height: 5vh;
+    text-align: center;
+  }
+  #listSpacer p {
+    padding-top: 1vh;
+    color: silver;
   }  
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
 import fieldImg from './images/field.jpg'
-import { Modal, Button, Dropdown } from 'semantic-ui-react'
+import { Modal, Button, Dropdown, BreadcrumbDivider } from 'semantic-ui-react'
 import { render } from 'react-dom'
 
 const details = ['type', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
@@ -74,17 +74,20 @@ function App() {
         return (
             <div className="startMenu">
                 <div>
-                        <button className="large fluid ui button primary"
+                    <h1>Curated lineup reminders texted just in time!</h1>
+                </div>
+                <div className="startMenuButtons">
+                    <div>
+                        <a
                             onClick={() => setStartPage(false)}
-                        >Retrieve Existing Lineup
-                        </button>   
+                        ><h3>Create New</h3></a>
                     </div>
                     <div>
-                        <button className="large fluid ui button primary"
+                        <a
                             onClick={() => setStartPage(false)}
-                        >Create New Lineup
-                        </button>
+                        ><h3>Find Existing</h3></a>
                     </div>
+                </div>
             </div>
         )
     }
@@ -96,14 +99,15 @@ function App() {
               onClose={() => setShowRosterSelect(false)}
               onOpen={() => setShowRosterSelect(true)}
               open={showRosterSelect}
-              trigger={<p id="parametersChange">Parameters<i className="settings icon"></i></p>}
+              trigger={<p id="parametersChange">Settings<i className="setting icon"></i></p>}
+              size="tiny"
               //trigger={<Button primary small>Edit</Button>}
             >
               <Modal.Header>Roster Details</Modal.Header>
               <Modal.Content>
                 <Modal.Description>
                     <div className="ui form two column grid">
-                        {details.map(detail => {
+                        {details.filter(item => item !== "Total").map(detail => {
                         if (detail === "type") {
                             return (
                                 <div className="row">
@@ -114,8 +118,9 @@ function App() {
                                     {leagueTypes.map(leagueType => {
                                         return (
                                             <button className="ui button small blue"
-                                            onClick = {() => 
-                                                {let newDetails = {...rosterDetails, type: leagueType}
+                                            onClick = {e => {
+                                                e.currentTarget.style.backgroundColor="#21ba45"
+                                                let newDetails = {...rosterDetails, type: leagueType}
                                                 setRosterDetails(newDetails)}
                                             }>{leagueType}</button>
                                         )
@@ -132,10 +137,10 @@ function App() {
                                 </div>
                                 <div className="column twelve wide">
                                     <input
-                                        type="text"
+                                        type="number"
                                         value={rosterDetails[`${detail}`]}
                                         onChange={(e) => {
-                                            let newDetails = {...rosterDetails, [detail]: parseInt(e.currentTarget.value)||''}
+                                            let newDetails = {...rosterDetails, [detail]: e.currentTarget.value}
                                             setRosterDetails(newDetails)
                                         }}
                                     />
@@ -230,26 +235,28 @@ function App() {
     const renderPlayerCard = (player, location="mainSearch") => {
         if (location==="mainSearch") {
             return (
-                <div className="playerSearchProfile"
-                    onClick={() => {
-                        if (currentRoster.Total.includes(player)) {
-                            return}
-                        modifyRoster(player, 'add')}}
-                    //only for desktop
-                    onMouseEnter={e => window.screen.width > 400 ? e.currentTarget.style.backgroundColor = "gainsboro" : ''}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
-                    >
-                    <div>
-                        <img
-                        className='ui image tiny' 
-                        src={player.profileImg}/>
-                    </div>
-                    <div className="content">
-                        <div className="header">
-                            <b>{player.displayName}</b>
+                <div>
+                    <div className="playerSearchProfile"
+                        onClick={() => {
+                            if (currentRoster.Total.includes(player)) {
+                                return}
+                            modifyRoster(player, 'add')}}
+                        //only for desktop
+                        onMouseEnter={e => window.screen.width > 400 ? e.currentTarget.style.backgroundColor = "gainsboro" : ''}
+                        onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
+                        >
+                        <div>
+                            <img
+                            className='ui image tiny' 
+                            src={player.profileImg}/>
                         </div>
-                        <div className="description">
-                            {player.position} {player.team}
+                        <div className="content">
+                            <div className="header">
+                                <b>{player.displayName}</b>
+                            </div>
+                            <div className="description">
+                                {player.position} {player.team}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -325,11 +332,6 @@ function App() {
 
     const renderRoster = () => {
         return (
-            /*OLD
-            <p>{addedPlayerDetails[`${pos}`] >= rosterDetails[`${pos}`] ? 
-                                rosterDetails[`${pos}`] : addedPlayerDetails[`${pos}`]} of {rosterDetails[`${pos}`]} added</p>
-            */
-
             allPositions.map((pos) => {
                 return ( 
                     <div className="rosterDisplayContainer">
@@ -377,6 +379,9 @@ function App() {
                                     {renderFilter()}
                                 </div>
                                 {loading ? renderLoadingGraphic() : renderPlayerList()}
+                        </div>
+                        <div id="listSpacer">
+                            <p>Click on a player to add</p>
                         </div>
                     </div>
                     <div className="column six wide">
