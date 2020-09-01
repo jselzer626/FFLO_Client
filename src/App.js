@@ -22,6 +22,7 @@ function App() {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [startPage, setStartPage] = useState(true)
+    const [currentSelected, setCurrentSelected] = useState('')
 
     useEffect(() => {
         setLoading(true)
@@ -85,7 +86,7 @@ function App() {
                     <div>
                         <a
                             onClick={() => setStartPage(false)}
-                        ><h3>Find Existing</h3></a>
+                        ><h3>Edit Existing</h3></a>
                     </div>
                 </div>
             </div>
@@ -237,13 +238,16 @@ function App() {
             return (
                 <div>
                     <div className="playerSearchProfile"
-                        onClick={() => {
+                        style={{"backgroundColor": player.id === currentSelected ? "lightgreen" : '' }}
+                        onClick={e => {
                             if (currentRoster.Total.includes(player)) {
                                 return}
-                            modifyRoster(player, 'add')}}
+                            modifyRoster(player, 'add')
+                            setCurrentSelected(player.id)
+                            }}
                         //only for desktop
                         onMouseEnter={e => window.screen.width > 400 ? e.currentTarget.style.backgroundColor = "gainsboro" : ''}
-                        onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
+                        onMouseLeave={e => player.id !== currentSelected ? e.currentTarget.style.backgroundColor = "" : "lightgreen"}
                         >
                         <div>
                             <img
@@ -255,7 +259,7 @@ function App() {
                                 <b>{player.displayName}</b>
                             </div>
                             <div className="description">
-                                {player.position} {player.team}
+                                {player.id !== currentSelected ? <div>{player.position} {player.team}</div> : <div id="addedGraphic">Added to roster!</div>}
                             </div>
                         </div>
                     </div>

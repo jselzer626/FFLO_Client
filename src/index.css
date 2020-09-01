@@ -73,6 +73,15 @@ div.startMenuButtons a {
   justify-content: space-evenly;
 }
 
+#rosterPositionContainer div.ui.segment.raised {
+  animation: slideDown 3s;
+}
+
+@keyframes slideDown {
+  from {top: -100vh;}
+  to {top: 0vh;}
+}
+
 #positionCounter {
   border-bottom: 1px solid gainsboro;
 }
@@ -105,6 +114,9 @@ div.ui.form.two.column.grid > .row {
   margin-bottom: 1vh;
 }
 
+#addedGraphic {
+  color: black;
+}
 .fullList {
   border-right: 1px solid gainsboro;
 }
