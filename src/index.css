@@ -67,19 +67,10 @@ div.startMenuButtons a {
   margin-left: 3px;
 }
 #rosterPositionContainer {
-  height: 100%;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-}
-
-#rosterPositionContainer div.ui.segment.raised {
-  animation: slideDown 3s;
-}
-
-@keyframes slideDown {
-  from {top: -100vh;}
-  to {top: 0vh;}
 }
 
 #positionCounter {
@@ -91,13 +82,29 @@ div.startMenuButtons a {
   margin-top: 75px;
 }
 
+#playerListHeader {
+  display: flex;
+  border-bottom: 1px solid gainsboro;
+  justify-content: space-between;
+
+}
 div.description {
   color: gray;
 }
 #searchOptions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   border-bottom: 1px solid gainsboro;
+  padding-bottom: 2vh;
+}
+
+#searchOptions div {
+  flex: 0 0 50%;
+}
+
+#searchOptions h3, p {
+  margin-bottom: 2px;
 }
 
 div.ui.form.two.column.grid > .row {
@@ -159,6 +166,9 @@ div.ui.form.two.column.grid > .row {
 
 
 @media screen and (max-width: 600px) {
+  .image.tiny {
+    max-height: 58px;
+  }
   .fullList {
     border-right: none;
     border-bottom: 1px solid gainsboro;

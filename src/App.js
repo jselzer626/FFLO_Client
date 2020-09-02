@@ -383,7 +383,7 @@ function App() {
                                 style={{"marginBottom": "1vh", "textAlign": "center"}}
                                 >Build/Edit Roster</h3>
                                 {renderInputForm()}
-                                <div id="searchOptions">
+                                <div id="playerListHeader">
                                     <h3>All Players</h3>
                                     {renderFilter()}
                                 </div>
@@ -397,6 +397,7 @@ function App() {
                         <div id="searchOptions">
                             <h3>My Team:</h3>
                             {renderRosterSelect()}
+                            <div>{addedPlayerDetails.Total} of {rosterDetails.Total} added</div>
                         </div>
                         <div id="rosterPositionContainer">
                             {renderRoster()}
