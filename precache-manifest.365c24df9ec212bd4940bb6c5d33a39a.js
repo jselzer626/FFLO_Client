@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "41d877f4b2b748718cc42370d6a80a7d",
+    "revision": "b56f7665730fd46ca3e1fcc0363f1c19",
     "url": "/FFLO_Client/index.html"
   },
   {
-    "revision": "d9ae882bb6d93d1ac811",
-    "url": "/FFLO_Client/static/css/main.bc65b9fc.chunk.css"
+    "revision": "14c1a44962894e09492b",
+    "url": "/FFLO_Client/static/css/main.19a36f50.chunk.css"
   },
   {
-    "revision": "4440e4a36dbc4d02a17e",
-    "url": "/FFLO_Client/static/js/2.299f3b36.chunk.js"
+    "revision": "8bbf2e485e4341e5294f",
+    "url": "/FFLO_Client/static/js/2.dbca6fe5.chunk.js"
   },
   {
     "revision": "5bd09eb7f2cf4d145d532d862be18942",
-    "url": "/FFLO_Client/static/js/2.299f3b36.chunk.js.LICENSE.txt"
+    "url": "/FFLO_Client/static/js/2.dbca6fe5.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d9ae882bb6d93d1ac811",
-    "url": "/FFLO_Client/static/js/main.9154abb6.chunk.js"
+    "revision": "14c1a44962894e09492b",
+    "url": "/FFLO_Client/static/js/main.0d661cfc.chunk.js"
   },
   {
     "revision": "5339797cd7071c153886",
