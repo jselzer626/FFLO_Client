@@ -23,6 +23,7 @@ function App() {
     const [hasError, setHasError] = useState(false)
     const [startPage, setStartPage] = useState(true)
     const [currentSelected, setCurrentSelected] = useState('')
+    const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: ''})
 
     useEffect(() => {
         setLoading(true)
@@ -91,6 +92,60 @@ function App() {
                 </div>
             </div>
         )
+    }
+
+    //renderSMS sendform automatically the first time that user fills out lineup
+    useEffect(() => {
+
+        if (allPositions.every(pos => parseInt(rosterDetails[`${pos}`]) === addedPlayerDetails[`${pos}`])) {
+
+            if (SMSDetails.autoShow) {
+                setSMSDetails({...SMSDetails, showForm: true, autoShow: false})
+            } 
+        }
+
+    })
+
+    const renderSMSForm = () => {
+
+        return (
+            <Modal
+                onClose={() => setSMSDetails({...SMSDetails, showForm: false})}
+                onOpen={() => setSMSDetails({...SMSDetails, showForm: true})}
+                open={SMSDetails.showForm}
+                trigger={<button className="ui button small positive">Set up reminder!</button>}
+                size="tiny"
+            >
+                <Modal.Header>
+                    <h1>Set Up Lineup Reminder</h1>
+                    <i className="times icon large"
+                        onClick={()=>setSMSDetails({...SMSDetails, showForm: false})}
+                    ></i>
+                </Modal.Header>
+                <Modal.Content>
+                    <form className="ui form">
+                        <Modal.Description>
+                                <form className="ui form">
+                                    <label>
+                                        Phone Number
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter number with no spaces e.g. ##########"
+                                        onChange={(e) => {
+                                            setSMSDetails({...SMSDetails, sendNumber: e.currentTarget.value})
+                                        }}
+                                    >
+                                    </input>
+                                </form>
+                        </Modal.Description>
+                        <Modal.Actions>
+                        <button className="ui large button fluid positive">Send me this!</button>               
+                        </Modal.Actions>    
+                    </form>
+                </Modal.Content>
+            </Modal>)
+
     }
 
     const renderRosterSelect = () => {
@@ -347,7 +402,7 @@ function App() {
                         <div className="currentRosterDisplay"
                         id="positionCounter">
                                 <h2>{pos}<i className="check circle icon green"
-                                style={{"display": addedPlayerDetails[`${pos}`] === rosterDetails[`${pos}`] ? "inline-block" : "none"}}
+                                style={{"display": addedPlayerDetails[`${pos}`] === parseInt(rosterDetails[`${pos}`]) ? "inline-block" : "none"}}
                                     ></i></h2>
                                 <p>{addedPlayerDetails[`${pos}`]} of {rosterDetails[`${pos}`]} added</p>
                                  
@@ -398,6 +453,7 @@ function App() {
                             <h3>My Team:</h3>
                             {renderRosterSelect()}
                             <div>{addedPlayerDetails.Total} of {rosterDetails.Total} added</div>
+                            {!SMSDetails.autoShow ? renderSMSForm() : ''}
                         </div>
                         <div id="rosterPositionContainer">
                             {renderRoster()}
