@@ -203,6 +203,7 @@ function App() {
         //total is the only sublist that gets kept
         let newRoster = {...currentRoster, RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Bench: []}
         let newDetails = {QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0}
+        
         action === "add" ? newRoster.Total.push(currentPlayer) : newRoster.Total = newRoster.Total.filter(player => player !== currentPlayer)
         
         let rankingType = rosterDetails.type === "Standard" ? "standardRanking" : "pprRanking"
@@ -238,7 +239,9 @@ function App() {
             return (
                 <div>
                     <div className="playerSearchProfile"
-                        style={{"backgroundColor": player.id === currentSelected ? "lightgreen" : '' }}
+                        style={{"backgroundColor": player.id === currentSelected ? "lightgreen" : 
+                        currentRoster.Total.includes(player) ? "#FFFFBA" :
+                        '' }}
                         onClick={e => {
                             if (currentRoster.Total.includes(player)) {
                                 return}
@@ -259,7 +262,8 @@ function App() {
                                 <b>{player.displayName}</b>
                             </div>
                             <div className="description">
-                                {player.id !== currentSelected ? <div>{player.position} {player.team}</div> : <div id="addedGraphic">Added to roster!</div>}
+                                {player.id === currentSelected ? <div id="addedGraphic">Added to roster!</div> : 
+                                currentRoster.Total.includes(player) ? <div>Already in roster</div> : <div>{player.position} {player.team}</div>}
                             </div>
                         </div>
                     </div>
@@ -278,6 +282,7 @@ function App() {
                         <i className="times icon large"
                             onClick={() => {
                                 modifyRoster(player, 'delete')
+                                setCurrentSelected('')
                             }}>
                         </i>
                     </div>
@@ -385,7 +390,7 @@ function App() {
                                 {loading ? renderLoadingGraphic() : renderPlayerList()}
                         </div>
                         <div id="listSpacer">
-                            <p>Click on a player to add</p>
+                            {loading ? '' : <p>Click on a player to add</p>}
                         </div>
                     </div>
                     <div className="column six wide">
