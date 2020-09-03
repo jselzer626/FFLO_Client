@@ -23,7 +23,7 @@ function App() {
     const [hasError, setHasError] = useState(false)
     const [startPage, setStartPage] = useState(true)
     const [currentSelected, setCurrentSelected] = useState('')
-    const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: ''})
+    const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, alreadyVerified:false})
 
     useEffect(() => {
         setLoading(true)
@@ -106,6 +106,54 @@ function App() {
 
     })
 
+    const handleCode = async (e, action) => {
+        
+        setLoading(true)
+
+        try {
+            let SMSForm = new FormData()
+            SMSForm.append('number', SMSDetails.sendNumber)
+            if (action==="verify") {
+                SMSForm.append('code', SMSDetails.verifyCode)
+            }
+            
+            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
+            'http://127.0.0.1:8000/players/generateCode'
+            let fetchResults = await fetch(url, {
+                method: 'POST',
+                body: SMSForm
+            })
+
+            let resultsJson = await fetchResults.json()
+
+            if (resultsJson) {
+                    setSMSDetails({...SMSDetails, sendSuccess: true})
+                    if (resultsJson==="already verified") {
+                        setSMSDetails({...SMSDetails, alreadyVerified: true})
+                    }
+            }
+            
+        } catch(e) {
+            setHasError(true)
+            console.warn(e)
+        }
+        
+        setLoading(false)
+
+    }
+
+    const initialSend = () => {
+
+    }
+
+    const verifyNumber = () => {
+
+    }
+
+    const alreadyVerified = () => {
+
+    }
+
     const renderSMSForm = () => {
 
         return (
@@ -125,7 +173,7 @@ function App() {
                 <Modal.Content>
                     <form className="ui form">
                         <Modal.Description>
-                                <form className="ui form">
+                            <div>
                                     <label>
                                         Phone Number
                                     </label>
@@ -137,10 +185,12 @@ function App() {
                                         }}
                                     >
                                     </input>
-                                </form>
+                            </div>
                         </Modal.Description>
                         <Modal.Actions>
-                        <button className="ui large button fluid positive">Send me this!</button>               
+                        <button className="ui large button fluid positive"
+                            onClick={handleCode()}
+                        >Send me this!</button>            
                         </Modal.Actions>    
                     </form>
                 </Modal.Content>
@@ -434,9 +484,9 @@ function App() {
                     id="playerSearch">
                     <div className="column ten wide fullList">
                         <div>   
-                                <h3
+                                <h2
                                 style={{"marginBottom": "1vh", "textAlign": "center"}}
-                                >Build/Edit Roster</h3>
+                                >Build/Edit Roster</h2>
                                 {renderInputForm()}
                                 <div id="playerListHeader">
                                     <h3>All Players</h3>
