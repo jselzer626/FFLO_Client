@@ -121,13 +121,12 @@ function App() {
             
             let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
             'http://127.0.0.1:8000/players/generateCode'
+
             let fetchResults = await fetch(url, {
                 method: 'POST',
                 body: SMSForm
             })
-
             let resultsJson = await fetchResults.json()
-            console.log(SMSDetails.initialSend)
             if (resultsJson) {
                 if (resultsJson === "send success") {
                     setSMSDetails({...SMSDetails, sendSuccess: true, initialSend: true})
@@ -136,6 +135,7 @@ function App() {
                 } else if (resultsJson === "error") {
                     setHasError(true)
                 }
+                
 
             }
             
@@ -161,40 +161,38 @@ function App() {
 
         if (!SMSDetails.initialSend) {
             return (
-                <div>
-                    <label>Phone</label>
+                <form className="ui form">
+                    <p>Let's get your phone number configured</p>
                     <input 
                         className="ui input"
                         type="text"
-                        placeholder="Enter number with no spaces e.g. ##########"
+                        placeholder="Enter number without spaces e.g. ##########"
                         onChange={(e) => {
                             setSMSDetails({...SMSDetails, sendNumber: e.currentTarget.value})
                         }}
                     ></input>
-                </div>
+                </form>
             ) 
-        } else if (SMSDetails.sendSuccess) {
+        } else if (SMSDetails.sendSuccess && !SMSDetails.verified) {
             return (
-                <div>
-                    <label>Just to get everything configured, we sent a 6 digit code to your phone</label>
+                <form className="ui form">
+                    <p>We just sent a 6-digit code to your phone</p>
                     <input
                         className="ui input"
                         type="text"
-                        placeholder="Please enter code here"
+                        placeholder="Enter code here"
                         onChange={(e) => {
                             setSMSDetails({...SMSDetails, verifyCode: e.currentTarget.value})
                         }}
                         ></input>
-                </div>
+                </form>
             )
         } else if (SMSDetails.verified) {
             return (
-                <div>
-                    <label>Good to go! Look out for a text this Thursday at 5PM.</label>
-                    <div className="ui image small">
-                        <img src={successCheck}/>
-                    </div>
-                </div>
+                <form className="ui form">
+                    <i className="check circle icon green massive"></i>
+                    <p>Look out for a message this Thursday at 5</p>
+                </form>
             )}
     }
 
@@ -202,6 +200,7 @@ function App() {
 
         return (
             <Modal
+                closeIcon
                 onClose={() => setSMSDetails({...SMSDetails, showForm: false})}
                 onOpen={() => setSMSDetails({...SMSDetails, showForm: true})}
                 open={SMSDetails.showForm}
@@ -209,19 +208,19 @@ function App() {
                 size="tiny"
             >
                 <Modal.Header>
-                    <h1>Set Up Lineup Reminder</h1>
-                    <i className="times icon large"
-                        onClick={()=>setSMSDetails({...SMSDetails, showForm: false})}
-                    ></i>
+                    <h2>{SMSDetails.verified ? <span>Good To Go!</span> : <span>Set Up Text Reminder</span>}</h2>
                 </Modal.Header>
                 <Modal.Content>
                         <Modal.Description>
                             {renderSMSFormContent()}
                         </Modal.Description>
-                        <Modal.Actions>
+                        <Modal.Actions
+                        style={{"display": SMSDetails.verified ? "none" : "block"}}>
                         <button className="ui large button fluid positive"
-                            onClick={() => handleCode()}
-                        >Send me this!</button>            
+                            onClick={(e) => {
+                                !SMSDetails.initialSend ? handleCode(e) : handleCode(e, 'verify')
+                            }}
+                        >Send</button>            
                         </Modal.Actions>    
                 </Modal.Content>
             </Modal>)

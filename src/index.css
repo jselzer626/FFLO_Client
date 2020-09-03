@@ -51,6 +51,10 @@ div.startMenuButtons a {
   margin-top: 40%;
 }
 
+.actions > button.ui.large.button.fluid.positive {
+  margin: 0;
+}
+
 .image.tiny {
   margin: 0px;
 }
@@ -77,9 +81,18 @@ div.startMenuButtons a {
   border-bottom: 1px solid gainsboro;
 }
 
+form.ui,form p {
+  color: black;
+  font-size: 1.15em;
+}
+
 .loadingContainer {
   text-align: center;
   margin-top: 75px;
+}
+
+form.ui.form {
+  text-align: center;
 }
 
 #playerListHeader {
