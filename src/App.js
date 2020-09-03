@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
 import fieldImg from './images/field.jpg'
 import successCheck from './images/success_check.png'
-import doh from './images/dog.gif'
+import doh from './images/doh.gif'
 import { Modal, Button, Dropdown, BreadcrumbDivider } from 'semantic-ui-react'
 import { render } from 'react-dom'
 
@@ -19,7 +19,7 @@ function App() {
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
     const [noResults, setNoResults] = useState({search: false, query: ''})
     const [currentRoster, setCurrentRoster] = useState({RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Total: [], Bench: []})
-    const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 15, Bench: 5})
+    const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 1})
     const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
@@ -111,7 +111,7 @@ function App() {
     const handleCode = async (e, action) => {
         
         setLoading(true)
-        SMSDetailsInitialSend ? setSMSDetails({...SMSDetails, initialSend:true})
+        setSMSDetails({...SMSDetails, initialSend:false})
 
         try {
             let SMSForm = new FormData()
@@ -150,47 +150,6 @@ function App() {
 
     }
 
-    const renderInitialSend = () => {
-        return (
-            <div>
-                <label>Phone Number</label>
-                <input
-                    type="text"
-                    placeholder="Enter number with no spaces e.g. ##########"
-                    onChange={(e) => {
-                        setSMSDetails({...SMSDetails, sendNumber: e.currentTarget.value})
-                    }}
-                    ></input>
-            </div>
-        )
-    }
-
-    const verifyNumber = () => {
-        return (
-            <div>
-                <label>Just to get everything configured, we sent a 6 digit code to your phone</label>
-                <input
-                    type="text"
-                    placeholder="Please enter code here"
-                    onChange={(e) => {
-                        setSMSDetails({...SMSDetails, verifyCode: e.currentTarget.value})
-                    }}
-                    ></input>
-            </div>
-        )
-    }
-
-    const verified = () => {
-        return (
-            <div>
-                <label>Good to go! Look out for a text this Thursday at 5PM.</label>
-                <div className="ui image medium">
-                    <img src={successCheck}/>
-                </div>
-            </div>
-        )
-    }
-
     const renderErrorMessage = () => {
         return (
             <div>
@@ -200,6 +159,49 @@ function App() {
                 </div>
             </div>
         )
+    }
+
+    const renderSMSFormContent = () => {
+
+        console.log(SMSDetails)
+
+        if (SMSDetails.initialSend) {
+            return (
+                <div>
+                    <label>Phone</label>
+                    <input 
+                        className="ui input"
+                        type="text"
+                        placeholder="Enter number with no spaces e.g. ##########"
+                        onChange={(e) => {
+                            setSMSDetails({...SMSDetails, sendNumber: e.currentTarget.value})
+                        }}
+                    ></input>
+                </div>
+            ) 
+        } else if (SMSDetails.sendSuccess && !SMSDetails.initialSend) {
+            return (
+                <div>
+                    <label>Just to get everything configured, we sent a 6 digit code to your phone</label>
+                    <input
+                        className="ui input"
+                        type="text"
+                        placeholder="Please enter code here"
+                        onChange={(e) => {
+                            setSMSDetails({...SMSDetails, verifyCode: e.currentTarget.value})
+                        }}
+                        ></input>
+                </div>
+            )
+        } else if (SMSDetails.verified) {
+            return (
+                <div>
+                    <label>Good to go! Look out for a text this Thursday at 5PM.</label>
+                    <div className="ui image small">
+                        <img src={successCheck}/>
+                    </div>
+                </div>
+            )}
     }
 
     const renderSMSForm = () => {
@@ -219,19 +221,14 @@ function App() {
                     ></i>
                 </Modal.Header>
                 <Modal.Content>
-                    <form className="ui form">
                         <Modal.Description>
-                            {SMSDetails.initialSend ? renderInitialSend : '' }
-                            {hasError ? renderErrorMessage() : ''}
-                            {SMSDetails.sendSuccess ? verifyNumber() : '' }
-                            {SMSDetails.verified ? verified() : ''}
+                            {renderSMSFormContent()}
                         </Modal.Description>
                         <Modal.Actions>
                         <button className="ui large button fluid positive"
-                            onClick={handleCode()}
+                            onClick={() => handleCode()}
                         >Send me this!</button>            
                         </Modal.Actions>    
-                    </form>
                 </Modal.Content>
             </Modal>)
 
@@ -484,6 +481,7 @@ function App() {
     }
 
     const renderRoster = () => {
+        console.log("non target component rendered")
         return (
             allPositions.map((pos) => {
                 return ( 
