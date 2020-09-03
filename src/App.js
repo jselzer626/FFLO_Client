@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
 import fieldImg from './images/field.jpg'
+import successCheck from './images/success_check.png'
+import doh from './images/dog.gif'
 import { Modal, Button, Dropdown, BreadcrumbDivider } from 'semantic-ui-react'
 import { render } from 'react-dom'
 
@@ -23,7 +25,7 @@ function App() {
     const [hasError, setHasError] = useState(false)
     const [startPage, setStartPage] = useState(true)
     const [currentSelected, setCurrentSelected] = useState('')
-    const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, alreadyVerified:false})
+    const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, verified:false, initialSend:true})
 
     useEffect(() => {
         setLoading(true)
@@ -109,10 +111,12 @@ function App() {
     const handleCode = async (e, action) => {
         
         setLoading(true)
+        SMSDetailsInitialSend ? setSMSDetails({...SMSDetails, initialSend:true})
 
         try {
             let SMSForm = new FormData()
             SMSForm.append('number', SMSDetails.sendNumber)
+            
             if (action==="verify") {
                 SMSForm.append('code', SMSDetails.verifyCode)
             }
@@ -127,10 +131,14 @@ function App() {
             let resultsJson = await fetchResults.json()
 
             if (resultsJson) {
+                if (resultsJson === "send success") {
                     setSMSDetails({...SMSDetails, sendSuccess: true})
-                    if (resultsJson==="already verified") {
-                        setSMSDetails({...SMSDetails, alreadyVerified: true})
-                    }
+                } else if (resultsJson === "verified") {
+                    setSMSDetails({...SMSDetails, verified: true})
+                } else if (resultsJson === "error") {
+                    setHasError(true)
+                }
+
             }
             
         } catch(e) {
@@ -142,16 +150,56 @@ function App() {
 
     }
 
-    const initialSend = () => {
-
+    const renderInitialSend = () => {
+        return (
+            <div>
+                <label>Phone Number</label>
+                <input
+                    type="text"
+                    placeholder="Enter number with no spaces e.g. ##########"
+                    onChange={(e) => {
+                        setSMSDetails({...SMSDetails, sendNumber: e.currentTarget.value})
+                    }}
+                    ></input>
+            </div>
+        )
     }
 
     const verifyNumber = () => {
-
+        return (
+            <div>
+                <label>Just to get everything configured, we sent a 6 digit code to your phone</label>
+                <input
+                    type="text"
+                    placeholder="Please enter code here"
+                    onChange={(e) => {
+                        setSMSDetails({...SMSDetails, verifyCode: e.currentTarget.value})
+                    }}
+                    ></input>
+            </div>
+        )
     }
 
-    const alreadyVerified = () => {
+    const verified = () => {
+        return (
+            <div>
+                <label>Good to go! Look out for a text this Thursday at 5PM.</label>
+                <div className="ui image medium">
+                    <img src={successCheck}/>
+                </div>
+            </div>
+        )
+    }
 
+    const renderErrorMessage = () => {
+        return (
+            <div>
+                <h1>Oops! Something went wrong</h1>
+                <div className="ui image medium">
+                    <img src={doh}/>
+                </div>
+            </div>
+        )
     }
 
     const renderSMSForm = () => {
@@ -173,19 +221,10 @@ function App() {
                 <Modal.Content>
                     <form className="ui form">
                         <Modal.Description>
-                            <div>
-                                    <label>
-                                        Phone Number
-                                    </label>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter number with no spaces e.g. ##########"
-                                        onChange={(e) => {
-                                            setSMSDetails({...SMSDetails, sendNumber: e.currentTarget.value})
-                                        }}
-                                    >
-                                    </input>
-                            </div>
+                            {SMSDetails.initialSend ? renderInitialSend : '' }
+                            {hasError ? renderErrorMessage() : ''}
+                            {SMSDetails.sendSuccess ? verifyNumber() : '' }
+                            {SMSDetails.verified ? verified() : ''}
                         </Modal.Description>
                         <Modal.Actions>
                         <button className="ui large button fluid positive"
