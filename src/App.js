@@ -25,7 +25,7 @@ function App() {
     const [hasError, setHasError] = useState(false)
     const [startPage, setStartPage] = useState(true)
     const [currentSelected, setCurrentSelected] = useState('')
-    const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, verified:false, initialSend:true})
+    const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, verified:false, initialSend:false})
 
     useEffect(() => {
         setLoading(true)
@@ -110,9 +110,7 @@ function App() {
 
     const handleCode = async (e, action) => {
         
-        setLoading(true)
-        setSMSDetails({...SMSDetails, initialSend:false})
-
+        
         try {
             let SMSForm = new FormData()
             SMSForm.append('number', SMSDetails.sendNumber)
@@ -129,12 +127,12 @@ function App() {
             })
 
             let resultsJson = await fetchResults.json()
-
+            console.log(SMSDetails.initialSend)
             if (resultsJson) {
                 if (resultsJson === "send success") {
-                    setSMSDetails({...SMSDetails, sendSuccess: true})
+                    setSMSDetails({...SMSDetails, sendSuccess: true, initialSend: true})
                 } else if (resultsJson === "verified") {
-                    setSMSDetails({...SMSDetails, verified: true})
+                    setSMSDetails({...SMSDetails, verified: true, initialSend: true})
                 } else if (resultsJson === "error") {
                     setHasError(true)
                 }
@@ -145,8 +143,6 @@ function App() {
             setHasError(true)
             console.warn(e)
         }
-        
-        setLoading(false)
 
     }
 
@@ -163,9 +159,7 @@ function App() {
 
     const renderSMSFormContent = () => {
 
-        console.log(SMSDetails)
-
-        if (SMSDetails.initialSend) {
+        if (!SMSDetails.initialSend) {
             return (
                 <div>
                     <label>Phone</label>
@@ -179,7 +173,7 @@ function App() {
                     ></input>
                 </div>
             ) 
-        } else if (SMSDetails.sendSuccess && !SMSDetails.initialSend) {
+        } else if (SMSDetails.sendSuccess) {
             return (
                 <div>
                     <label>Just to get everything configured, we sent a 6 digit code to your phone</label>
@@ -481,13 +475,14 @@ function App() {
     }
 
     const renderRoster = () => {
-        console.log("non target component rendered")
         return (
             allPositions.map((pos) => {
                 return ( 
                     <div className="rosterDisplayContainer">
                         <div className="currentRosterDisplay"
-                        id="positionCounter">
+                        id="positionCounter"
+                        style={{"backgroundColor": addedPlayerDetails[`${pos}`] === parseInt(rosterDetails[`${pos}`]) ? "#dfd" : "none"}}
+                        >
                                 <h2>{pos}<i className="check circle icon green"
                                 style={{"display": addedPlayerDetails[`${pos}`] === parseInt(rosterDetails[`${pos}`]) ? "inline-block" : "none"}}
                                     ></i></h2>
