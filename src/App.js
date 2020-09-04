@@ -117,10 +117,12 @@ function App() {
             
             if (action==="verify") {
                 SMSForm.append('code', SMSDetails.verifyCode)
+                SMSForm.append('roster', JSON.stringify(currentRoster))
+                SMSForm.append('parameters', JSON.stringify(rosterDetails))
             }
             
-            let url = action === 'verify' ? 'https://fflo-server.herokuapp.com/players/verifyCode' :
-            'https://fflo-server.herokuapp.com/players/generateCode'
+            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
+            'http://127.0.0.1:8000/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
@@ -176,7 +178,9 @@ function App() {
         } else if (SMSDetails.sendSuccess && !SMSDetails.verified) {
             return (
                 <form className="ui form">
-                    <p>We just sent a 6-digit code to your phone</p>
+                    <i className="key icon huge"></i>
+                    <p>Looks like you're a new user - Welcome!</p>
+                    <p>We just sent a 6-digit code to for security purposes</p>
                     <input
                         className="ui input"
                         type="text"
@@ -191,7 +195,7 @@ function App() {
             return (
                 <form className="ui form">
                     <i className="check circle icon green massive"></i>
-                    <p>Look out for a message this Thursday at 5</p>
+                    <p>Look for a message this Thursday at 5PM</p>
                 </form>
             )}
     }
@@ -505,7 +509,8 @@ function App() {
    
     }
 
-
+    console.log(JSON.stringify(currentRoster))
+    console.log(JSON.stringify(rosterDetails))
     return (
         <div className="App">
             <div className="ui text container raised segment">
@@ -532,8 +537,8 @@ function App() {
                     </div>
                     <div className="column six wide">
                         <div id="searchOptions">
-                            <h3>{currentRoster.name}</h3>
-                            {renderRosterSelect()}
+                            <div><h3>{currentRoster.name}</h3></div>
+                            <div>{renderRosterSelect()}</div>
                             <div>{addedPlayerDetails.Total} of {rosterDetails.Total} added</div>
                             {!SMSDetails.autoShow ? renderSMSForm() : ''}
                         </div>

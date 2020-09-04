@@ -69,6 +69,7 @@ div.startMenuButtons a {
 #parametersChange {
   color: silver;
   cursor: pointer;
+  text-align: right;
 }
 #parametersChange i {
   margin-left: 3px;
