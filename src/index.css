@@ -1,6 +1,5 @@
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
-    min-height: 100vh;
+  min-height: 100vh;
   }
   
 .items {
@@ -18,6 +17,10 @@ body {
 
 .grid > .column {
   min-height: 100%;
+}
+
+form.ui.form .ui.input {
+  font-size: 1.15rem;
 }
 
 .App {
@@ -81,6 +84,11 @@ div.startMenuButtons a {
   border-bottom: 1px solid gainsboro;
 }
 
+#rosterNameEdit i {
+  margin-left: 2vw;
+  color: silver;
+}
+
 form.ui,form p {
   color: black;
   font-size: 1.15em;
@@ -132,6 +140,7 @@ div.ui.form.two.column.grid > .row {
 
 #playerSearch input {
   margin-bottom: 1vh;
+  font-size: 1.15rem;
 }
 
 #addedGraphic {

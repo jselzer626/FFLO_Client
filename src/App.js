@@ -6,7 +6,7 @@ import doh from './images/doh.gif'
 import { Modal, Button, Dropdown, BreadcrumbDivider } from 'semantic-ui-react'
 import { render } from 'react-dom'
 
-const details = ['type', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
+const details = ['type', 'name', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
 const flexPositions = ["WR", "TE", "RB"]
 const allPositions = ['QB', 'WR', 'RB', 'TE', 'FLEX', 'K', 'DEF', 'Bench']
@@ -18,7 +18,7 @@ function App() {
     const [showRosterSelect, setShowRosterSelect] = useState(false)
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
     const [noResults, setNoResults] = useState({search: false, query: ''})
-    const [currentRoster, setCurrentRoster] = useState({RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Total: [], Bench: []})
+    const [currentRoster, setCurrentRoster] = useState({RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Total: [], Bench: [], name:"NewLineup1"})
     const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 1})
     const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
     const [loading, setLoading] = useState(false)
@@ -119,8 +119,8 @@ function App() {
                 SMSForm.append('code', SMSDetails.verifyCode)
             }
             
-            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
-            'http://127.0.0.1:8000/players/generateCode'
+            let url = action === 'verify' ? 'https://fflo-server.herokuapp.com/players/verifyCode' :
+            'https://fflo-server.herokuapp.com/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
@@ -261,10 +261,8 @@ function App() {
                                         )
                                     })}
                                     </div>
-
-                                </div>
-                            )
-                        }
+                                </div> )
+                        } 
                         return (
                             <div className="row">
                                 <div className="column four wide">
@@ -272,11 +270,12 @@ function App() {
                                 </div>
                                 <div className="column twelve wide">
                                     <input
-                                        type="number"
-                                        value={rosterDetails[`${detail}`]}
+                                        type="text"
+                                        value = {detail === "name" ? currentRoster.name : rosterDetails[`${detail}`]}
                                         onChange={(e) => {
-                                            let newDetails = {...rosterDetails, [detail]: e.currentTarget.value}
-                                            setRosterDetails(newDetails)
+                                            let newDetails = detail === "name" ? {...currentRoster, name: e.currentTarget.value} :
+                                            {...rosterDetails, [detail]: e.currentTarget.value}
+                                            detail === "name" ? setCurrentRoster(newDetails) : setRosterDetails(newDetails)
                                         }}
                                     />
                                 </div>
@@ -406,7 +405,7 @@ function App() {
         } else {
             return (
                 <div className="ui segment raised"
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = "gainsboro"}
+                onMouseEnter={e => window.screen.width > 400 ? e.currentTarget.style.backgroundColor = "gainsboro" : ''}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = ""}
                     >
                     <div style={{"display": "flex"}}>
@@ -480,7 +479,7 @@ function App() {
                     <div className="rosterDisplayContainer">
                         <div className="currentRosterDisplay"
                         id="positionCounter"
-                        style={{"backgroundColor": addedPlayerDetails[`${pos}`] === parseInt(rosterDetails[`${pos}`]) ? "#dfd" : "none"}}
+                        style={{"backgroundColor": addedPlayerDetails[`${pos}`] === parseInt(rosterDetails[`${pos}`]) ? "#dfd" : "white"}}
                         >
                                 <h2>{pos}<i className="check circle icon green"
                                 style={{"display": addedPlayerDetails[`${pos}`] === parseInt(rosterDetails[`${pos}`]) ? "inline-block" : "none"}}
@@ -515,9 +514,11 @@ function App() {
                     id="playerSearch">
                     <div className="column ten wide fullList">
                         <div>   
+                            <div>
                                 <h2
                                 style={{"marginBottom": "1vh", "textAlign": "center"}}
                                 >Build/Edit Roster</h2>
+                            </div>
                                 {renderInputForm()}
                                 <div id="playerListHeader">
                                     <h3>All Players</h3>
@@ -531,7 +532,7 @@ function App() {
                     </div>
                     <div className="column six wide">
                         <div id="searchOptions">
-                            <h3>My Team:</h3>
+                            <h3>{currentRoster.name}</h3>
                             {renderRosterSelect()}
                             <div>{addedPlayerDetails.Total} of {rosterDetails.Total} added</div>
                             {!SMSDetails.autoShow ? renderSMSForm() : ''}
