@@ -138,15 +138,11 @@ function App() {
                 } else if (resultsJson === "error") {
                     setHasError(true)
                 }
-                
-
-            }
-            
+            }          
         } catch(e) {
             setHasError(true)
             console.warn(e)
         }
-
     }
 
     const renderErrorMessage = () => {
@@ -220,9 +216,9 @@ function App() {
                     {findRoster.rostersRetreived.map(roster => {
                         return (
                             <button className="ui basic button fluid"
-                                onClick={() => getRostersFromServer(e, roster)}
+                                onClick={() => setCurrentRoster({...currentRoster, Total: roster})}
                             >
-                                {roster}
+                                {roster.name}
                             </button>
                         )
                     })}
@@ -231,8 +227,30 @@ function App() {
 
         }
         
-    const getRostersFromServer = async (e, action) => {
+    const getRostersFromServer = async (e) => {
         
+        try {
+            let SMSForm = new FormData()
+            SMSForm.append('number', SMSDetails.sendNumber)
+
+            let fetchResults = await fetch("http://127.0.0.1:8000/getRosters", {
+                method: 'POST',
+                body: SMSForm
+            })
+            
+            let resultsJson = await fetchResults.json()
+
+            if (resultsJson == "error") {
+                throw "invalid number"
+            }
+
+            setFindRoster({...findRoster, rosters: resultsJson})
+
+        } catch(e) {
+            setHasError(true)
+            console.warn(e)
+        }
+    }
     }
 
     const renderSMSForm = () => {
@@ -286,9 +304,8 @@ function App() {
                         style={{"display": !findRoster.sendSuccess && !hasError ? "block" : "none"}}
                     >
                         <button className="ui large button positive fluid"
-                            onClick={e => getRostersFromServer(e, "check")}
-                        >
-                            Send
+                            onClick={e => getRostersFromServer(e)}
+                        >Send
                         </button>
                     </Modal.Actions>
                 </Modal.Content>
