@@ -58,6 +58,10 @@ div.startMenuButtons a {
   margin: 0;
 }
 
+div.column.seven.wide {
+  overflow: auto;
+}
+
 .image.tiny {
   margin: 0px;
 }
@@ -79,6 +83,7 @@ div.startMenuButtons a {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  overflow: auto;
 }
 
 #positionCounter {
@@ -141,6 +146,10 @@ div.ui.form.two.column.grid > .row {
 
 #playerSearch input {
   margin-bottom: 1vh;
+  font-size: 1.15rem;
+}
+
+div.description {
   font-size: 1.15rem;
 }
 

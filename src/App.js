@@ -26,6 +26,7 @@ function App() {
     const [startPage, setStartPage] = useState(true)
     const [currentSelected, setCurrentSelected] = useState('')
     const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, verified:false, initialSend:false})
+    const [findRoster, setFindRoster] = useState({showForm: false,  sendNumber:'', rostersRetrieved:[], sendSuccess: false})
 
     useEffect(() => {
         setLoading(true)
@@ -200,6 +201,40 @@ function App() {
             )}
     }
 
+    const renderLookUpFormContent = () => {
+        if (!findRoster.sendSuccess && !hasError) {
+            return (
+                    <form className="ui form">
+                        <p>Please enter your number below and we'll find your rosters</p>
+                        <input
+                            type="text"
+                            onChange={e => setFindRoster({findRoster, sendNumber: e.currentTarget.value})}
+                        >
+                        </input>
+                    </form>
+            )
+        } else if (findRoster.rostersRetrieved.length > 0) {
+            return (
+                <div className="ui vertical buttons">
+                    <h2>Please choose a roster</h2>
+                    {findRoster.rostersRetreived.map(roster => {
+                        return (
+                            <button className="ui basic button fluid"
+                                onClick={() => getRostersFromServer(e, roster)}
+                            >
+                                {roster}
+                            </button>
+                        )
+                    })}
+                </div>
+            )
+
+        }
+        
+    const getRostersFromServer = async (e, action) => {
+        
+    }
+
     const renderSMSForm = () => {
 
         return (
@@ -212,7 +247,7 @@ function App() {
                 size="tiny"
             >
                 <Modal.Header>
-                    <h2>{SMSDetails.verified ? <span>Good To Go!</span> : <span>Set Up Text Reminder</span>}</h2>
+                    {SMSDetails.verified ? <h2>Good To Go!</h2> : <h2>Set Up Text Reminder</h2>}
                 </Modal.Header>
                 <Modal.Content>
                         <Modal.Description>
@@ -231,6 +266,37 @@ function App() {
 
     }
 
+    const renderLookupForm = () => {
+        return (
+            <Modal
+                closeIcon
+                size="tiny"
+                onClose={() => setFindRoster({...FindRoster, showForm: false})}
+                onOpen={() => setFindRoster({...FindRoster, showForm: true})}
+                trigger={<button className="ui button small positive">Look Up Roster</button>}
+            >
+                <Modal.Header>
+                    Find Existing Roster
+                </Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                    {renderLookUpFormContent()}
+                    </Modal.Description>
+                    <Modal.Actions
+                        style={{"display": !findRoster.sendSuccess && !hasError ? "block" : "none"}}
+                    >
+                        <button className="ui large button positive fluid"
+                            onClick={e => getRostersFromServer(e, "check")}
+                        >
+                            Send
+                        </button>
+                    </Modal.Actions>
+                </Modal.Content>
+
+            </Modal>
+        )
+    }
+
     const renderRosterSelect = () => {
 
         return (
@@ -240,6 +306,7 @@ function App() {
               open={showRosterSelect}
               trigger={<p id="parametersChange">Settings<i className="setting icon"></i></p>}
               size="tiny"
+              closeIcon
               //trigger={<Button primary small>Edit</Button>}
             >
               <Modal.Header>Roster Details</Modal.Header>
@@ -517,7 +584,7 @@ function App() {
                 { startPage ? showStartPage() : 
                 <div className="ui two column grid stackable"
                     id="playerSearch">
-                    <div className="column ten wide fullList">
+                    <div className="column nine wide fullList">
                         <div>   
                             <div>
                                 <h2
@@ -535,7 +602,7 @@ function App() {
                             {loading ? '' : <p>Click on a player to add</p>}
                         </div>
                     </div>
-                    <div className="column six wide">
+                    <div className="column seven wide">
                         <div id="searchOptions">
                             <div><h3>{currentRoster.name}</h3></div>
                             <div>{renderRosterSelect()}</div>
