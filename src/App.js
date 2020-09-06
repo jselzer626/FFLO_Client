@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
+import helmet from './images/helmet.png'
 import fieldImg from './images/field.jpg'
 import successCheck from './images/success_check.png'
 import doh from './images/doh.gif'
@@ -19,7 +20,7 @@ function App() {
     const [filteredPlayerList, setFilteredPlayerList] = useState([])
     const [noResults, setNoResults] = useState({search: false, query: ''})
     const [currentRoster, setCurrentRoster] = useState({RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Total: [], Bench: [], name:"NewLineup1"})
-    const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 1})
+    const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 3, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 11, Bench: 1})
     const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
@@ -81,16 +82,20 @@ function App() {
                 <div>
                     <h1>Curated lineup reminders texted just in time!</h1>
                 </div>
+                <div>
+                    <img className="ui image fluid" src={helmet}/>
+                </div>
                 <div className="startMenuButtons">
                     <div>
-                        <a
+                        <button
+                            className="ui fluid large button positive"
                             onClick={() => setStartPage(false)}
-                        ><h3>Create New</h3></a>
+                        >
+                            Create New
+                            </button>
                     </div>
                     <div>
-                        <a
-                            onClick={() => setStartPage(false)}
-                        ><h3>Edit Existing</h3></a>
+                        {renderLookupForm()}
                     </div>
                 </div>
             </div>
@@ -138,11 +143,15 @@ function App() {
                 } else if (resultsJson === "error") {
                     setHasError(true)
                 }
-            }          
+                
+
+            }
+            
         } catch(e) {
             setHasError(true)
             console.warn(e)
         }
+
     }
 
     const renderErrorMessage = () => {
@@ -198,25 +207,18 @@ function App() {
     }
 
     const renderLookUpFormContent = () => {
-        if (!findRoster.sendSuccess && !hasError) {
+
+        if (findRoster.rostersRetrieved && findRoster.rostersRetrieved.length > 0) {
             return (
-                    <form className="ui form">
-                        <p>Please enter your number below and we'll find your rosters</p>
-                        <input
-                            type="text"
-                            onChange={e => setFindRoster({findRoster, sendNumber: e.currentTarget.value})}
-                        >
-                        </input>
-                    </form>
-            )
-        } else if (findRoster.rostersRetrieved.length > 0) {
-            return (
-                <div className="ui vertical buttons">
-                    <h2>Please choose a roster</h2>
-                    {findRoster.rostersRetreived.map(roster => {
+                <div id="existingRosterList">
+                    <h3>Please choose a roster to edit:</h3>
+                    {findRoster.rostersRetrieved.map(roster => {
                         return (
-                            <button className="ui basic button fluid"
-                                onClick={() => setCurrentRoster({...currentRoster, Total: roster})}
+                            <button className="ui button primary fluid large"
+                                onClick={() => {
+                                    let players = fullPlayerList.filter(player => roster.players.includes(player.id))
+                                    console.log(players)
+                                }}
                             >
                                 {roster.name}
                             </button>
@@ -224,33 +226,50 @@ function App() {
                     })}
                 </div>
             )
-
+        } else {
+            return (
+                <form className="ui form">
+                    <p>Please enter your number below and we'll find your rosters</p>
+                    <input
+                        type="text"
+                        onChange={e => setFindRoster({findRoster, sendNumber: e.currentTarget.value})}
+                    >
+                    </input>
+                </form>
+            )
         }
-        
-    const getRostersFromServer = async (e) => {
-        
-        try {
-            let SMSForm = new FormData()
-            SMSForm.append('number', SMSDetails.sendNumber)
 
-            let fetchResults = await fetch("http://127.0.0.1:8000/getRosters", {
-                method: 'POST',
-                body: SMSForm
-            })
-            
-            let resultsJson = await fetchResults.json()
+    }
+        
+        const getRostersFromServer = async (e) => {
+        
+            try {
+                let SMSForm = new FormData()
+                SMSForm.append('number', findRoster.sendNumber)
+    
+                let fetchResults = await fetch("http://127.0.0.1:8000/players/getRosters", {
+                    method: 'POST',
+                    body: SMSForm
+                })
 
-            if (resultsJson == "error") {
-                throw "invalid number"
+                console.log(fetchResults)
+                
+                let resultsJson = await fetchResults.json()
+    
+                if (resultsJson == "error") {
+                    throw "invalid number"
+                }
+
+                let rostersToAdd = JSON.parse(resultsJson).map(roster => {
+                        return {name: roster.fields.name, players: roster.fields.players}})
+    
+                setFindRoster({...findRoster, rostersRetrieved: rostersToAdd})
+    
+            } catch(e) {
+                setHasError(true)
+                console.warn(e)
             }
 
-            setFindRoster({...findRoster, rosters: resultsJson})
-
-        } catch(e) {
-            setHasError(true)
-            console.warn(e)
-        }
-    }
     }
 
     const renderSMSForm = () => {
@@ -289,19 +308,20 @@ function App() {
             <Modal
                 closeIcon
                 size="tiny"
-                onClose={() => setFindRoster({...FindRoster, showForm: false})}
-                onOpen={() => setFindRoster({...FindRoster, showForm: true})}
-                trigger={<button className="ui button small positive">Look Up Roster</button>}
+                onClose={() => setFindRoster({...findRoster, showForm: false})}
+                onOpen={() => setFindRoster({...findRoster, showForm: true})}
+                trigger={<button className="ui button large fluid positive">Edit Existing</button>}
             >
                 <Modal.Header>
-                    Find Existing Roster
+                    {!findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0 ? 
+                    <span>Find Existing Rosters</span> : <span>Success!<i className="check circle icon green"></i></span>}
                 </Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
                     {renderLookUpFormContent()}
                     </Modal.Description>
                     <Modal.Actions
-                        style={{"display": !findRoster.sendSuccess && !hasError ? "block" : "none"}}
+                        style={{"display": !findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0 ? "block" : "none"}}
                     >
                         <button className="ui large button positive fluid"
                             onClick={e => getRostersFromServer(e)}
@@ -593,8 +613,6 @@ function App() {
    
     }
 
-    console.log(JSON.stringify(currentRoster))
-    console.log(JSON.stringify(rosterDetails))
     return (
         <div className="App">
             <div className="ui text container raised segment">

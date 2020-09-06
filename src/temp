@@ -1,0 +1,54 @@
+ const getRostersFromServer = async (e) => {
+        
+        try {
+            let SMSForm = new FormData()
+            SMSForm.append('number', SMSDetails.sendNumber)
+
+            let fetchResults = await fetch("http://127.0.0.1:8000/getRosters", {
+                method: 'POST',
+                body: SMSForm
+            })
+            
+            let resultsJson = await fetchResults.json()
+
+            if (resultsJson == "error") {
+                throw "invalid number"
+            }
+
+            setFindRoster({...findRoster, rosters: resultsJson})
+
+        } catch(e) {
+            setHasError(true)
+            console.warn(e)
+        }
+    }
+
+    const renderLookupForm = () => {
+        return (
+            <Modal
+                closeIcon
+                size="tiny"
+                onClose={() => setFindRoster({...findRoster, showForm: false})}
+                onOpen={() => setFindRoster({...findRoster, showForm: true})}
+                trigger={<button className="ui button small positive">Look Up Roster</button>}
+            >
+                <Modal.Header>
+                    Find Existing Roster
+                </Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+                    {renderLookUpFormContent()}
+                    </Modal.Description>
+                    <Modal.Actions
+                        style={{"display": !findRoster.sendSuccess && !hasError ? "block" : "none"}}
+                    >
+                        <button className="ui large button positive fluid"
+                            onClick={e => getRostersFromServer(e)}
+                        >Send
+                        </button>
+                    </Modal.Actions>
+                </Modal.Content>
+
+            </Modal>
+        )
+    }

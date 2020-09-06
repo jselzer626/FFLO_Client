@@ -29,25 +29,31 @@ form.ui.form .ui.input {
 }
 
 .startMenu {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./images/field.jpg');
-  background-size: cover;
   min-height: 85vh;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  text-align: center;
 }
 
-div.startMenu h1 {
-  text-align: center;
-  padding: 5vh;
-  color: white;
+.startMenu h1 {
+  padding-bottom: 2vh;
+  border-bottom: 1px solid gainsboro;
+}
+
+div.startMenu img.ui.image.fluid {
+  padding: 10vw;
 }
 
 .startMenuButtons {
-  padding-top: 45vh;
+  border-top: 1px solid gainsboro;
   display: flex;
   justify-content: space-evenly;
+  padding-top: 2vh;
 }
 
-div.startMenuButtons a {
-  color: white;
+.startMenuButtons div {
+  width: 45%;
 }
 
 .button.primary {
@@ -151,6 +157,25 @@ div.ui.form.two.column.grid > .row {
 
 div.description {
   font-size: 1.15rem;
+  color: black;
+}
+
+div.column.tewelve.wide input{
+  font-size: 1.15rem;
+}
+
+#existingRosterList {
+  text-align: center;
+  max-height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow: auto;
+}
+
+#existingRosterList > button {
+  margin-top: 2vh;
 }
 
 #addedGraphic {
@@ -198,6 +223,12 @@ div.description {
 
 
 @media screen and (max-width: 600px) {
+  .startMenuButtons div {
+    width: auto;
+  }
+  div.startMenu img.ui.image.fluid {
+    padding: 5vw;
+  }
   #rosterPositionContainer {
     height: fit-content;
   }
