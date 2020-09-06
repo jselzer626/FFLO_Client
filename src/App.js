@@ -127,8 +127,8 @@ function App() {
                 SMSForm.append('parameters', JSON.stringify(rosterDetails))
             }
             
-            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
-            'http://127.0.0.1:8000/players/generateCode'
+            let url = action === 'verify' ? 'https://fflo-server.herokuapp.com/players/verifyCode' :
+            'https://fflo-server.herokuapp.com/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
@@ -247,7 +247,7 @@ function App() {
                 let SMSForm = new FormData()
                 SMSForm.append('number', findRoster.sendNumber)
     
-                let fetchResults = await fetch("http://127.0.0.1:8000/players/getRosters", {
+                let fetchResults = await fetch("https://fflo-server.herokuapp.com/players/getRosters", {
                     method: 'POST',
                     body: SMSForm
                 })
