@@ -116,7 +116,6 @@ function App() {
 
     const handleCode = async (e, action) => {
         
-        
         try {
             let SMSForm = new FormData()
             SMSForm.append('number', SMSDetails.sendNumber)
@@ -158,7 +157,9 @@ function App() {
         return (
             <div>
                 <h1>Oops! Something went wrong</h1>
-                <div className="ui image medium">
+                <div className="ui image fluid"
+                    style={{"padding": "5vh"}}    
+                >
                     <img src={doh}/>
                 </div>
             </div>
@@ -166,7 +167,7 @@ function App() {
     }
 
     const renderSMSFormContent = () => {
-
+        
         if (!SMSDetails.initialSend) {
             return (
                 <form className="ui form">
@@ -231,6 +232,7 @@ function App() {
                 <form className="ui form">
                     <p>Please enter your number below and we'll find your rosters</p>
                     <input
+                        style={{"font-size": "1.15rem"}}
                         type="text"
                         onChange={e => setFindRoster({findRoster, sendNumber: e.currentTarget.value})}
                     >
@@ -243,6 +245,8 @@ function App() {
         
         const getRostersFromServer = async (e) => {
         
+            setLoading(true)
+
             try {
                 let SMSForm = new FormData()
                 SMSForm.append('number', findRoster.sendNumber)
@@ -264,9 +268,11 @@ function App() {
                         return {name: roster.fields.name, players: roster.fields.players}})
     
                 setFindRoster({...findRoster, rostersRetrieved: rostersToAdd})
-    
+                setLoading(false)
+
             } catch(e) {
                 setHasError(true)
+                setLoading(false)
                 console.warn(e)
             }
 
@@ -318,7 +324,7 @@ function App() {
                 </Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                    {renderLookUpFormContent()}
+                    {loading ? renderLoadingGraphic() : hasError ? renderErrorMessage() : renderLookUpFormContent()}
                     </Modal.Description>
                     <Modal.Actions
                         style={{"display": !findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0 ? "block" : "none"}}
@@ -361,8 +367,8 @@ function App() {
                                     {leagueTypes.map(leagueType => {
                                         return (
                                             <button className="ui button small blue"
+                                            style={{"backgroundColor": leagueType === rosterDetails.type ? "#21ba45" : "" }}
                                             onClick = {e => {
-                                                e.currentTarget.style.backgroundColor="#21ba45"
                                                 let newDetails = {...rosterDetails, type: leagueType}
                                                 setRosterDetails(newDetails)}
                                             }>{leagueType}</button>
@@ -378,6 +384,7 @@ function App() {
                                 </div>
                                 <div className="column twelve wide">
                                     <input
+                                        style={{"fontSize": "1.15rem"}}
                                         type="text"
                                         value = {detail === "name" ? currentRoster.name : rosterDetails[`${detail}`]}
                                         onChange={(e) => {
@@ -394,9 +401,14 @@ function App() {
                 </Modal.Description>
               </Modal.Content>
               <Modal.Actions>
-                <Button onClick={() => setShowRosterSelect(false)} positive massive>
+                <button className="ui button large fluid positive" 
+                    onClick={() => {
+                        let totalPlayers = allPositions.reduce((total, pos) => { return total + parseInt(rosterDetails[`${pos}`])}, 0)
+                        setRosterDetails({...rosterDetails, Total: totalPlayers})
+                        setShowRosterSelect(false)}}
+                        >
                   Save Details
-                </Button>
+                </button>
               </Modal.Actions>
             </Modal>
           )
