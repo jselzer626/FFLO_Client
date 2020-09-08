@@ -4,7 +4,7 @@ import helmet from './images/helmet.png'
 import fieldImg from './images/field.jpg'
 import successCheck from './images/success_check.png'
 import doh from './images/doh.gif'
-import { Modal, Button, Dropdown, BreadcrumbDivider } from 'semantic-ui-react'
+import { Modal, Dropdown } from 'semantic-ui-react'
 import { render } from 'react-dom'
 
 const details = ['type', 'name', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
@@ -12,6 +12,9 @@ const leagueTypes = ["Standard", "PPR"]
 const flexPositions = ["WR", "TE", "RB"]
 const allPositions = ['QB', 'WR', 'RB', 'TE', 'FLEX', 'K', 'DEF', 'Bench']
 const specialDetails = ['type', 'Total', 'Bench']
+const rosterDetailsStart = {type: 'Standard', QB: 1, RB: 2, WR: 3, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 11, Bench: 1}
+const addedPlayerDetailsStart = {QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0}
+const currentRosterStart = {RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Total: [], Bench: [], name:"NewLineup1"}
 
 function App() {
 
@@ -25,9 +28,11 @@ function App() {
     const [loading, setLoading] = useState(false)
     const [hasError, setHasError] = useState(false)
     const [startPage, setStartPage] = useState(true)
+    const [showMenu, setShowMenu] = useState(false)
     const [currentSelected, setCurrentSelected] = useState('')
     const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, verified:false, initialSend:false})
     const [findRoster, setFindRoster] = useState({showForm: false,  sendNumber:'', rostersRetrieved:[], sendSuccess: false})
+    const [showResetConfirm, setShowResetConfirm] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -557,6 +562,60 @@ function App() {
             </div>
         )
     }
+    
+    const resetQuestion = () => {
+        return (
+            <Modal
+                closeIcon
+                size="tiny"
+                open={showResetConfirm}
+                onClose={() => setShowResetConfirm(false)}
+            >
+                <Modal.Description>
+                    <h3>Are you sure you want to reset your added details?</h3>
+                </Modal.Description>
+                <Modal.Actions>
+                    <button className="ui positive button medium"
+                        onClick={() => {
+                                setAddedPlayerDetails(addedPlayerDetailsStart)
+                                setRosterDetails(rosterDetailsStart)
+                                setCurrentRoster(currentRosterStart)
+                                setShowResetConfirm(false)
+                        }}
+                        >Yes</button>
+                    <button className="ui negative button medium"
+                        onClick={() => setShowResetConfirm(false)}
+                    >No</button>
+                </Modal.Actions>
+            </Modal>
+        )
+    }
+
+    const sidebarMenu = () => {
+    
+        return (
+          <div>
+              <div id="sidebarIcon">
+                  <i className="bars icon large"
+                  onClick={() => setShowMenu(!showMenu)}></i>
+              </div>
+              <div
+                className ={showMenu ? "visible Sidebar" : "hidden Sidebar"}
+                >
+                <p onClick={() => setShowResetConfirm(true)}
+                >
+                   <i className="icon football ball"></i>Create New
+                </p>
+                <p>
+                    <i className="icon football ball"></i>Edit Existing
+                </p>
+                <p>
+                    <i className="icon football ball"></i>About
+                </p>
+              </div>
+          </div>
+        )
+      }
 
     const renderPlayerList = () => {
 
@@ -627,6 +686,9 @@ function App() {
 
     return (
         <div className="App">
+            <div className="nav">
+                <h1>FFLO</h1>
+            </div>
             <div className="ui text container raised segment">
                 { startPage ? showStartPage() : 
                 <div className="ui two column grid stackable"

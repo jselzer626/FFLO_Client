@@ -36,6 +36,36 @@ form.ui.form .ui.input {
   text-align: center;
 }
 
+#sidebarIcon {
+  position: fixed;
+}
+
+.visible {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  box-shadow: rgba(34, 36, 38, 0.12) 0px 2px 4px 0px, rgba(34, 36, 38, 0.15) 0px 2px 10px 0px;
+  position: fixed;
+  top: 5vh;
+  width: 25vw;
+  height: 33vh;
+  z-index: 1;
+  background-color: white;
+  padding-left: 3vw;
+  padding-right: 2vw;
+}
+
+.visible p {
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 2vh;
+  border-bottom: 1px solid darkgray;
+}
+
+.hidden {
+  display: none;
+}
+
 .startMenu h1 {
   padding-bottom: 2vh;
   border-bottom: 1px solid gainsboro;
@@ -193,10 +223,16 @@ div.column.tewelve.wide input{
 }
 
 .nav {
-  text-align: center;
   background-color: darkslategrey;
   height: 5vh;
   border-bottom: 2px solid slategrey;
+  display: flex;
+}
+
+i.bars.icon.large {
+  color: white;
+  margin-top: 1vh;
+  margin-left: 1vh;
 }
 
 #listSpacer {
@@ -224,6 +260,10 @@ div.column.tewelve.wide input{
 
 
 @media screen and (max-width: 600px) {
+  .visible {
+    top: 6vh;
+    width: 50vw;
+  }
   .startMenuButtons div {
     width: auto;
   }
