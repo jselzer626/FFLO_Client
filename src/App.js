@@ -36,7 +36,7 @@ function App() {
 
     useEffect(() => {
         setLoading(true)
-        fetch('https://fflo-server.herokuapp.com/players/loadInitial').then(
+        fetch('http://127.0.0.1:8000/players/loadInitial').then(
             async(res) => {
                 let playerList = await res.json()
 
@@ -137,8 +137,8 @@ function App() {
 
             console.log(SMSForm)
             
-            let url = action === 'verify' ? 'https://fflo-server.herokuapp.com/players/verifyCode' :
-            'https://fflo-server.herokuapp.com/players/generateCode'
+            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
+            'http://127.0.0.1:8000/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
@@ -226,8 +226,11 @@ function App() {
                         return (
                             <button className="ui button primary fluid large"
                                 onClick={() => {
-                                    let players = fullPlayerList.filter(player => roster.players.includes(player.id))
-                                    console.log(players)
+                                    let players = fullPlayerList.filter(player => roster.players.includes(player.systemId))
+                                    players.map(player => modifyRoster(player, "add"))
+                                    setCurrentRoster({...currentRoster, name: roster.name})
+                                    setStartPage(false)
+                                    setFindRoster({...findRoster, showForm: false})
                                 }}
                             >
                                 {roster.name}
@@ -260,7 +263,7 @@ function App() {
                 let SMSForm = new FormData()
                 SMSForm.append('number', findRoster.sendNumber)
     
-                let fetchResults = await fetch("https://fflo-server.herokuapp.com/players/getRosters", {
+                let fetchResults = await fetch("http://127.0.0.1:8000/players/getRosters", {
                     method: 'POST',
                     body: SMSForm
                 })
