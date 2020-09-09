@@ -40,14 +40,14 @@ form.ui.form .ui.input {
   position: fixed;
 }
 
-.visible {
+.visibleSidebar {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   box-shadow: rgba(34, 36, 38, 0.12) 0px 2px 4px 0px, rgba(34, 36, 38, 0.15) 0px 2px 10px 0px;
   position: fixed;
   top: 5vh;
-  width: 25vw;
+  width: 20vw;
   height: 33vh;
   z-index: 1;
   background-color: white;
@@ -55,14 +55,14 @@ form.ui.form .ui.input {
   padding-right: 2vw;
 }
 
-.visible p {
+.visibleSidebar p {
   font-size: 18px;
   font-weight: bold;
   padding-bottom: 2vh;
   border-bottom: 1px solid darkgray;
 }
 
-.hidden {
+.hiddenSidebar {
   display: none;
 }
 
@@ -105,6 +105,13 @@ div.column.seven.wide {
 
 .ui.dropdown.icon {
   color: silver;
+}
+
+div.header i.times.icon::before {
+  cursor: pointer;
+  position: fixed;
+  right: 1.5vw;
+  top: 1vh;
 }
 
 #parametersChange {
@@ -244,6 +251,15 @@ i.bars.icon.large {
   margin: 0 auto;
 }
 
+#resetConfirmDescription {
+  min-height: 8vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+#resetConfirmDescription > p {
+  margin-left: 2vh;
+}
 .currentRosterDisplay {
   display: flex;
   flex-wrap: wrap;
@@ -260,7 +276,7 @@ i.bars.icon.large {
 
 
 @media screen and (max-width: 600px) {
-  .visible {
+  .visibleSidebar {
     top: 6vh;
     width: 50vw;
   }

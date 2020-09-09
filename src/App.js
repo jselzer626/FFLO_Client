@@ -100,7 +100,10 @@ function App() {
                             </button>
                     </div>
                     <div>
-                        {renderLookupForm()}
+                        <button
+                            className="ui fluid large button positive"
+                            onClick={() => setFindRoster({...findRoster, showForm: true})}
+                        >Edit Existing</button>
                     </div>
                 </div>
             </div>
@@ -237,7 +240,7 @@ function App() {
                 <form className="ui form">
                     <p>Please enter your number below and we'll find your rosters</p>
                     <input
-                        style={{"font-size": "1.15rem"}}
+                        style={{"fontSize": "1.15rem"}}
                         type="text"
                         onChange={e => setFindRoster({findRoster, sendNumber: e.currentTarget.value})}
                     >
@@ -319,9 +322,9 @@ function App() {
             <Modal
                 closeIcon
                 size="tiny"
+                open={findRoster.showForm}
                 onClose={() => setFindRoster({...findRoster, showForm: false})}
                 onOpen={() => setFindRoster({...findRoster, showForm: true})}
-                trigger={<button className="ui button large fluid positive">Edit Existing</button>}
             >
                 <Modal.Header>
                     {!findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0 ? 
@@ -558,33 +561,46 @@ function App() {
         return (
             <div className="loadingContainer">
                 <img src={LoadingSpinner}/>
-                <h3>Loading Player List</h3>
+                <h3>Loading</h3>
             </div>
         )
     }
+
     
     const resetQuestion = () => {
         return (
             <Modal
-                closeIcon
-                size="tiny"
                 open={showResetConfirm}
-                onClose={() => setShowResetConfirm(false)}
+                onClose={() => {
+                    setShowResetConfirm(false)
+                }}
             >
-                <Modal.Description>
-                    <h3>Are you sure you want to reset your added details?</h3>
+                <Modal.Header>
+                    Reset Confirm
+                    <i className="times icon"
+                        onClick={() => setShowResetConfirm(false)}
+                    ></i>
+                </Modal.Header>
+                <Modal.Description
+                id="resetConfirmDescription">
+                    <p>Are you sure you want to reset your added details?</p>
                 </Modal.Description>
                 <Modal.Actions>
                     <button className="ui positive button medium"
                         onClick={() => {
+                                if (startPage) {
+                                    setStartPage(false)
+                                } else {
                                 setAddedPlayerDetails(addedPlayerDetailsStart)
                                 setRosterDetails(rosterDetailsStart)
                                 setCurrentRoster(currentRosterStart)
                                 setShowResetConfirm(false)
+                                }
                         }}
                         >Yes</button>
                     <button className="ui negative button medium"
-                        onClick={() => setShowResetConfirm(false)}
+                        onClick={() => 
+                            setShowResetConfirm(false)}
                     >No</button>
                 </Modal.Actions>
             </Modal>
@@ -600,13 +616,15 @@ function App() {
                   onClick={() => setShowMenu(!showMenu)}></i>
               </div>
               <div
-                className ={showMenu ? "visible Sidebar" : "hidden Sidebar"}
+                className ={showMenu ? "visibleSidebar" : "hiddenSidebar"}
                 >
-                <p onClick={() => setShowResetConfirm(true)}
+                <p onClick={() => startPage ? setStartPage(false) : setShowResetConfirm(true)}
                 >
                    <i className="icon football ball"></i>Create New
                 </p>
-                <p>
+                <p
+                    onClick={() => setFindRoster({...findRoster, showForm: true})}
+                >
                     <i className="icon football ball"></i>Edit Existing
                 </p>
                 <p>
@@ -678,18 +696,20 @@ function App() {
                     </div>
                 )
             })
-
-
         )
    
     }
 
     return (
         <div className="App">
+            {sidebarMenu()}
+            {resetQuestion()}
+            {renderLookupForm()}
             <div className="nav">
                 <h1>FFLO</h1>
             </div>
-            <div className="ui text container raised segment">
+            <div className="ui text container raised segment"
+            onClick={() => setShowMenu(false)}>
                 { startPage ? showStartPage() : 
                 <div className="ui two column grid stackable"
                     id="playerSearch">
