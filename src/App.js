@@ -36,7 +36,7 @@ function App() {
 
     useEffect(() => {
         setLoading(true)
-        fetch('http://127.0.0.1:8000/players/loadInitial').then(
+        fetch('https://fflo-server.herokuapp.com/players/loadInitial').then(
             async(res) => {
                 let playerList = await res.json()
 
@@ -135,8 +135,8 @@ function App() {
                 SMSForm.append('parameters', JSON.stringify(rosterDetails))
             }
 
-            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
-            'http://127.0.0.1:8000/players/generateCode'
+            let url = action === 'verify' ? 'https://fflo-server.herokuapp.com/players/verifyCode' :
+            'https://fflo-server.herokuapp.com/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
@@ -162,10 +162,10 @@ function App() {
 
     const renderErrorMessage = () => {
         return (
-            <div>
+            <div style={{"textAlign": "center"}}>
                 <h2>Oops! Something went wrong</h2>
                 <div className="ui image fluid"
-                    style={{"padding": "5vh"}}    
+                    style={{"padding-right": "5vh", "padding-left": "5vh"}}    
                 >
                     <img src={doh}/>
                 </div>
@@ -264,7 +264,7 @@ function App() {
                 let SMSForm = new FormData()
                 SMSForm.append('number', findRoster.sendNumber)
     
-                let fetchResults = await fetch("http://127.0.0.1:8000/players/getRosters", {
+                let fetchResults = await fetch("https://fflo-server.herokuapp.com/players/getRosters", {
                     method: 'POST',
                     body: SMSForm
                 })
@@ -656,7 +656,9 @@ function App() {
                    <i className="icon football ball"></i>Create New
                 </p>
                 <p
-                    onClick={() => setFindRoster({...findRoster, showForm: true})}
+                    onClick={() => {
+                        setHasError(false)
+                        setFindRoster({...findRoster, showForm: true})}}
                 >
                     <i className="icon football ball"></i>Edit Existing
                 </p>
@@ -758,9 +760,9 @@ function App() {
                                     <h3>All Players</h3>
                                     {renderFilter()}
                                 </div>
-                                {loading ? renderLoadingGraphic() : renderPlayerList()}
+                                {loading ? renderLoadingGraphic() : hasError ? renderErrorMessage() : renderPlayerList()}
                         </div>
-                        <div id="listSpacer">
+                        <div id="listSpacer" style={{"display": hasError ? "none" : "block"}}>
                             {loading ? '' : <p>Click on a player to add</p>}
                         </div>
                     </div>
