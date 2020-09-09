@@ -113,7 +113,7 @@ function App() {
     //renderSMS sendform automatically the first time that user fills out lineup
     useEffect(() => {
 
-        if (allPositions.every(pos => parseInt(rosterDetails[`${pos}`]) === addedPlayerDetails[`${pos}`])) {
+        if (allPositions.every(pos => parseInt(rosterDetails[`${pos}`]) === addedPlayerDetails[`${pos}`]) && findRoster.rostersRetrieved.length === 0) {
 
             if (SMSDetails.autoShow) {
                 setSMSDetails({...SMSDetails, showForm: true, autoShow: false})
@@ -135,8 +135,6 @@ function App() {
                 SMSForm.append('parameters', JSON.stringify(rosterDetails))
             }
 
-            console.log(SMSForm)
-            
             let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
             'http://127.0.0.1:8000/players/generateCode'
 
@@ -226,9 +224,9 @@ function App() {
                         return (
                             <button className="ui button primary fluid large"
                                 onClick={() => {
+                                    setRosterDetails(JSON.parse(roster.parameters))
                                     let players = fullPlayerList.filter(player => roster.players.includes(player.systemId))
-                                    players.map(player => modifyRoster(player, "add"))
-                                    setCurrentRoster({...currentRoster, name: roster.name})
+                                    setCurrentRoster({...currentRoster, Total: players, name: roster.name})
                                     setStartPage(false)
                                     setFindRoster({...findRoster, showForm: false})
                                 }}
@@ -252,8 +250,11 @@ function App() {
                 </form>
             )
         }
-
     }
+
+    useEffect(() => {
+        currentRoster.Total.map(player => modifyRoster(player, "add"))
+    }, [findRoster.showForm])
         
         const getRostersFromServer = async (e) => {
         
@@ -267,8 +268,6 @@ function App() {
                     method: 'POST',
                     body: SMSForm
                 })
-
-                console.log(fetchResults)
                 
                 let resultsJson = await fetchResults.json()
     
@@ -277,8 +276,8 @@ function App() {
                 }
 
                 let rostersToAdd = JSON.parse(resultsJson).map(roster => {
-                        return {name: roster.fields.name, players: roster.fields.players}})
-    
+                        return {name: roster.fields.name, players: roster.fields.players, parameters: roster.fields.parameters}})
+                    console.log(rostersToAdd)
                 setFindRoster({...findRoster, rostersRetrieved: rostersToAdd})
                 setLoading(false)
 
@@ -465,13 +464,24 @@ function App() {
 
     }
     const modifyRoster = (currentPlayer, action) => {
-
+        console.log('rendered')
+        console.log(currentPlayer)
         //recalculating each time
         //total is the only sublist that gets kept
         let newRoster = {...currentRoster, RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Bench: []}
         let newDetails = {QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0}
         
-        action === "add" ? newRoster.Total.push(currentPlayer) : newRoster.Total = newRoster.Total.filter(player => player !== currentPlayer)
+        if (newRoster.Total === rosterDetails.Total) {
+            return "limit reached"
+        }
+
+        if (action === "add") {
+            if (!newRoster.Total.includes(currentPlayer)) {
+                newRoster.Total.push(currentPlayer)
+            }
+        } else {
+            newRoster.Total = newRoster.Total.filter(player => player !== currentPlayer)
+        }    
         
         let rankingType = rosterDetails.type === "Standard" ? "standardRanking" : "pprRanking"
         //sort players so highest ranked automatically get sent to starting positions
