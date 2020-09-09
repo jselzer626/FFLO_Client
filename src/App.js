@@ -163,7 +163,7 @@ function App() {
     const renderErrorMessage = () => {
         return (
             <div>
-                <h1>Oops! Something went wrong</h1>
+                <h2>Oops! Something went wrong</h2>
                 <div className="ui image fluid"
                     style={{"padding": "5vh"}}    
                 >
@@ -277,7 +277,6 @@ function App() {
 
                 let rostersToAdd = JSON.parse(resultsJson).map(roster => {
                         return {name: roster.fields.name, players: roster.fields.players, parameters: roster.fields.parameters}})
-                    console.log(rostersToAdd)
                 setFindRoster({...findRoster, rostersRetrieved: rostersToAdd})
                 setLoading(false)
 
@@ -464,19 +463,17 @@ function App() {
 
     }
     const modifyRoster = (currentPlayer, action) => {
-        console.log('rendered')
-        console.log(currentPlayer)
+
         //recalculating each time
         //total is the only sublist that gets kept
         let newRoster = {...currentRoster, RB: [], QB: [], WR: [], TE: [], FLEX: [], K: [], DEF: [], Bench: []}
         let newDetails = {QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0}
         
-        if (newRoster.Total === rosterDetails.Total) {
-            return "limit reached"
-        }
+        console.log(newRoster.Total)
+        console.log(rosterDetails.Total)
 
         if (action === "add") {
-            if (!newRoster.Total.includes(currentPlayer)) {
+            if (!newRoster.Total.includes(currentPlayer) && newRoster.Total.length <= rosterDetails.Total - 1) {
                 newRoster.Total.push(currentPlayer)
             }
         } else {
@@ -511,14 +508,35 @@ function App() {
 
     }
 
+    const renderCardContent = (player, contentType) => {
+
+        if (currentRoster.Total.length >= rosterDetails.Total && player.id === currentSelected) {
+            return contentType === "text" ? <div id="addedGraphic">Roster already full</div> : "lightcoral"
+        } else if (player.id === currentSelected) {
+            return contentType === "text" ? <div id="addedGraphic">Added to roster!</div> : "lightgreen"
+        } else if (currentRoster.Total.includes(player) && player.id !== currentSelected) {
+            return contentType === "text" ? <div id="addedGraphic">Already in roster</div> : "#FFFFBA"
+        } else {
+            return contentType === "text" ? <div>{player.position} {player.team}</div> : ''
+        }
+    }
+
+    /*
+    old 
+    style={{"backgroundColor": player.id === currentSelected ? "lightgreen" : 
+                        currentRoster.Total.includes(player) ? "#FFFFBA" :
+                        '' }}
+    {player.id === currentSelected ? <div id="addedGraphic">Added to roster!</div> : 
+                                currentRoster.Total.includes(player) ? <div>Already in roster</div> : <div>{player.position} {player.team}</div>}
+    
+    */
+
     const renderPlayerCard = (player, location="mainSearch") => {
         if (location==="mainSearch") {
             return (
                 <div>
                     <div className="playerSearchProfile"
-                        style={{"backgroundColor": player.id === currentSelected ? "lightgreen" : 
-                        currentRoster.Total.includes(player) ? "#FFFFBA" :
-                        '' }}
+                        style={{"backgroundColor": renderCardContent(player, "color")}}
                         onClick={e => {
                             if (currentRoster.Total.includes(player)) {
                                 return}
@@ -539,8 +557,7 @@ function App() {
                                 <b>{player.displayName}</b>
                             </div>
                             <div className="description">
-                                {player.id === currentSelected ? <div id="addedGraphic">Added to roster!</div> : 
-                                currentRoster.Total.includes(player) ? <div>Already in roster</div> : <div>{player.position} {player.team}</div>}
+                                {renderCardContent(player, "text")}
                             </div>
                         </div>
                     </div>
