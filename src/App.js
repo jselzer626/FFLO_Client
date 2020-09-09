@@ -130,9 +130,12 @@ function App() {
             
             if (action==="verify") {
                 SMSForm.append('code', SMSDetails.verifyCode)
+            } else {
                 SMSForm.append('roster', JSON.stringify(currentRoster))
                 SMSForm.append('parameters', JSON.stringify(rosterDetails))
             }
+
+            console.log(SMSForm)
             
             let url = action === 'verify' ? 'https://fflo-server.herokuapp.com/players/verifyCode' :
             'https://fflo-server.herokuapp.com/players/generateCode'
@@ -150,8 +153,6 @@ function App() {
                 } else if (resultsJson === "error") {
                     setHasError(true)
                 }
-                
-
             }
             
         } catch(e) {
@@ -179,7 +180,7 @@ function App() {
         if (!SMSDetails.initialSend) {
             return (
                 <form className="ui form">
-                    <p>Let's get your phone number configured</p>
+                    <p>Please enter your phone number below</p>
                     <input 
                         className="ui input"
                         type="text"
@@ -194,7 +195,7 @@ function App() {
             return (
                 <form className="ui form">
                     <i className="key icon huge"></i>
-                    <p>Looks like you're a new user - Welcome!</p>
+                    <p>Looks like you're new - Welcome!</p>
                     <p>We just sent a 6-digit code to for security purposes</p>
                     <input
                         className="ui input"
@@ -210,7 +211,7 @@ function App() {
             return (
                 <form className="ui form">
                     <i className="check circle icon green massive"></i>
-                    <p>Look for a message this Thursday at 5PM</p>
+                    <p>Your lineup has been saved. Look for a message this Thursday at 5PM</p>
                 </form>
             )}
     }
@@ -323,7 +324,9 @@ function App() {
                 closeIcon
                 size="tiny"
                 open={findRoster.showForm}
-                onClose={() => setFindRoster({...findRoster, showForm: false})}
+                onClose={() => {setFindRoster({...findRoster, showForm: false})
+                    setHasError(false)
+                }}
                 onOpen={() => setFindRoster({...findRoster, showForm: true})}
             >
                 <Modal.Header>
@@ -335,7 +338,7 @@ function App() {
                     {loading ? renderLoadingGraphic() : hasError ? renderErrorMessage() : renderLookUpFormContent()}
                     </Modal.Description>
                     <Modal.Actions
-                        style={{"display": !findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0 ? "block" : "none"}}
+                        style={{"display": (!findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0) && !hasError ? "block" : "none"}}
                     >
                         <button className="ui large button positive fluid"
                             onClick={e => getRostersFromServer(e)}

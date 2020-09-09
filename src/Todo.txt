@@ -1,0 +1,6 @@
+Todo's
+
+Server is returning array of player ID's from postgres db instead of the FFN id's... need to make sure that the FFN id's are returned for retrieving client side
+
+figure out what is happening with the scheduler by testing 15 minute interval scheduling for both texting and DB updates...
+
