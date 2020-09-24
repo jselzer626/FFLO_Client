@@ -117,7 +117,19 @@ function App() {
                     <i className="undo icon big"></i>
                 </div>
                     
-                <div className="startMenuButtons">
+                <div
+                    style={{"border-top": "1px solid gainsboro", "padding-top": "2vh"}}    
+                >
+                    <button
+                    className="massive fluid ui button"
+                    id="startButton"
+                    >Let's get started!</button>
+                </div>
+            </div>
+        )
+    }
+    /**
+     * <div className="startMenuButtons">
                     <div>
                         <button
                             className="ui fluid large button"
@@ -138,10 +150,7 @@ function App() {
                         >Edit Existing</button>
                     </div>
                 </div>
-            </div>
-        )
-    }
-
+     */
     //renderSMS sendform automatically the first time that user fills out lineup
     useEffect(() => {
 

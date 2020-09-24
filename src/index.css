@@ -41,9 +41,17 @@ form.ui.form .ui.input {
 .startMenu {
   min-height: 85vh;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   flex-direction: column;
   text-align: center;
+}
+
+.startMenu h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 12vh;
+  font-size: xx-large;
 }
 
 #sidebarIcon {
@@ -79,10 +87,6 @@ form.ui.form .ui.input {
 .startMenu h1 {
   padding-bottom: 2vh;
   border-bottom: 1px solid gainsboro;
-}
-
-div.startMenu img.ui.image.fluid {
-  padding: 10vw;
 }
 
 .startMenuButtons {
@@ -147,6 +151,11 @@ div.header i.times.icon::before {
 #rosterNameEdit i {
   margin-left: 2vw;
   color: silver;
+}
+
+#startButton {
+  background-color: darkgreen;
+  color: white;
 }
 
 form.ui,form p {
@@ -269,7 +278,7 @@ i.bars.icon.large {
 
 #startFact p {
   width: 75%;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 #aboutOptions div > p {
@@ -310,6 +319,9 @@ i.bars.icon.large {
 
 
 @media screen and (max-width: 600px) {
+  .startMenu h1 {
+    font-size: x-large;
+  }
   .visibleSidebar {
     top: 6vh;
     width: 50vw;
@@ -319,9 +331,6 @@ i.bars.icon.large {
   }
   #startFact p {
     font-size: 16px;
-  }
-  div.startMenu img.ui.image.fluid {
-    padding: 5vw;
   }
   #rosterPositionContainer {
     height: fit-content;
