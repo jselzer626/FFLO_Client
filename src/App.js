@@ -99,7 +99,7 @@ function App() {
                     </p>
                 </div>
                 <div id="startFact">
-                    <p>We message every Thursday at 5PM with start/sit suggestions. Create and update rosters anytime
+                    <p>Create and update rosters easily. We'll message you every Thursday at 5PM with start/sit suggestions.
                     </p>
                     <i className="mail icon big"></i>
                 </div>
