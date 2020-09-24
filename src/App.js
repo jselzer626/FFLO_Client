@@ -38,7 +38,7 @@ function App() {
 
     useEffect(() => {
         setLoading(true)
-        fetch('http://fflo-server.herokuapp.com/players/loadInitial').then(
+        fetch('https://fflo-server.herokuapp.com/players/loadInitial').then(
             async(res) => {
                 let playerList = await res.json()
 
@@ -99,7 +99,7 @@ function App() {
                     </p>
                 </div>
                 <div id="startFact">
-                    <p>Create a roster and we'll message every Thursday at 5PM with start/sit suggestions. Update your players anytime
+                    <p>We message every Thursday at 5PM with start/sit suggestions. Create and update rosters anytime
                     </p>
                     <i className="mail icon big"></i>
                 </div>
