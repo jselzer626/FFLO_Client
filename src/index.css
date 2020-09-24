@@ -261,6 +261,17 @@ i.bars.icon.large {
   align-items: center;
 }
 
+#startFact {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#startFact p {
+  width: 75%;
+  font-size: 20px;
+}
+
 #aboutOptions div > p {
   width: 75%;
 }
@@ -305,6 +316,9 @@ i.bars.icon.large {
   }
   .startMenuButtons div {
     width: auto;
+  }
+  #startFact p {
+    font-size: 16px;
   }
   div.startMenu img.ui.image.fluid {
     padding: 5vw;

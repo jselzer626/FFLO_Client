@@ -88,9 +88,35 @@ function App() {
                 <div>
                     <h1>Never miss a fantasy football lineup again!</h1>
                 </div>
-                <div>
-                    <img className="ui image fluid" src={helmet}/>
+                <div id="startFact"
+                    style={{"backgroundColor": "whitesmoke", "border": "1px solid gainsboro",
+                    "padding-top": "1.5vh", "padding-bottom": "1.5vh"
+                    }}    
+                >
+                    <i className="clock outline icon big"></i>
+                    <p>Lineup Reminder sends you optimized lineup recommendations just in time
+                    </p>
                 </div>
+                <div id="startFact">
+                    <p>Upload your roster once and we'll send weekly texts Thursdays at 5 of who to start
+                        and who to sit
+                    </p>
+                    <i className="mail icon big"></i>
+                </div>
+                <div id="startFact"
+                    style={{"backgroundColor": "whitesmoke", "border": "1px solid gainsboro",
+                    "padding-top": "1.5vh", "padding-bottom": "1.5vh"}}
+                >
+                    <i className="line graph icon big"></i>
+                    <p>Rankings are updated every 48 hours by guys who spend way too long looking at sports
+                    </p>
+                </div>
+                <div id="startFact">
+                    <p>Totally free to use and opt out anytime. 
+                    </p>
+                    <i className="undo icon big"></i>
+                </div>
+                    
                 <div className="startMenuButtons">
                     <div>
                         <button
@@ -101,7 +127,7 @@ function App() {
                                 setTimeout(() => setShowAbout(true), 3000)
                             }}
                         >
-                            Create New
+                            New Lineup
                             </button>
                     </div>
                     <div>
