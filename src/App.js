@@ -34,6 +34,7 @@ function App() {
     const [findRoster, setFindRoster] = useState({showForm: false,  sendNumber:'', rostersRetrieved:[], sendSuccess: false})
     const [showResetConfirm, setShowResetConfirm] = useState(false)
     const [showAbout, setShowAbout] = useState(false)
+    const [showStartOptions, setShowStartOptions] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -120,12 +121,52 @@ function App() {
                 <div
                     style={{"border-top": "1px solid gainsboro", "padding-top": "2vh"}}    
                 >
-                    <button
-                    className="massive fluid ui button"
-                    id="startButton"
-                    >Let's get started!</button>
+                    {startOptionsModal()}
                 </div>
             </div>
+        )
+    }
+
+    const startOptionsModal = () => {
+        return (
+            <Modal
+                size="tiny"
+                closeIcon
+                open={showStartOptions}
+                onOpen={() => setShowStartOptions(true)}
+                onClose={() => setShowStartOptions(false)}
+                trigger={ <button
+                    className="massive fluid ui button"
+                    id="startButton"
+                    >Let's get started!</button>}
+            >
+                <Modal.Header>
+                    <h1>Welcome!</h1>
+                </Modal.Header>
+                <Modal.Content>
+                    <div className="startOptionButtons">
+                    <div>
+                        <button
+                            className="ui fluid large button"
+                            style={{"backgroundColor": "darkgreen", "color": "white"}}
+                            onClick={() => {
+                                setStartPage(false)
+                                setTimeout(() => setShowAbout(true), 3000)
+                            }}
+                        >
+                            Create New Lineup
+                            </button>
+                    </div>
+                    <div>
+                        <button
+                            className="ui fluid large button"
+                            style={{"backgroundColor": "darkgreen", "color": "white"}}
+                            onClick={() => setFindRoster({...findRoster, showForm: true})}
+                        >Edit Existing Lineup</button>
+                    </div>
+                    </div>
+                </Modal.Content>
+            </Modal>
         )
     }
     /**
@@ -225,21 +266,23 @@ function App() {
                 open={showAbout}
                 onOpen={() => setShowAbout(true)}
                 onClose={() => setShowAbout(false)}
-                trigger={<p><i className="icon football ball"></i>About</p>}
+                trigger={<p
+                    onClick={() => setShowMenu(!showMenu)}
+                ><i className="icon football ball"></i>About</p>}
             >
                 <Modal.Header
                     style={{"backgroundColor": "darkgreen", "color": "white"}}>
-                    <h2>Welcome!</h2>
+                    <h2>Here's the rundown...</h2>
                 </Modal.Header>
                 <Modal.Content>
                     <Modal.Description
                     id="aboutOptions">
-                        <div><i className="setting icon big"></i><p>Edit roster parameters by clicking on <span style={{"color": "gray"}}><i className="setting icon"></i>Settings</span>
+                        <div><p>Edit roster parameters with <span style={{"color": "gray"}}><i className="setting icon"></i>Settings</span> (We've added some presets to start)
                         </p></div>
-                        <div><i className="list ol icon big"></i><p>Add players to your roster</p></div>
-                        <div><i className="icon check circle big"></i><p>Once all your players are added, a <button className="ui small button positive">Set up reminder!</button> button will appear.</p></div>
-                        <div><i className="phone icon big"></i><p>Add your phone number</p></div>
-                        <div><i className="mail icon big"></i><p>We'll send a message every Thursday at 5PM with suggested starters and bench</p></div>
+                        <div><p>Once all your added players are added, a <button className="ui small button positive">Set up reminder!</button> button will appear.</p></div>
+                        <div><p>Add your phone number and confirm the 6 digit code we send</p></div>
+                        <div><p>Your roster is now saved! Look out for a text Thursdays at 5PM with lineup suggestions</p></div>
+                        <div><p>Opt out anytime by clicking <button className="ui small button negative">Delete Lineup</button></p></div>
                     </Modal.Description>
                 </Modal.Content>
             </Modal>
@@ -690,7 +733,7 @@ function App() {
                 </Modal.Header>
                 <Modal.Description
                 id="resetConfirmDescription">
-                    <p>Are you sure you want to reset your added details?</p>
+                    <p>Are you sure you want to delete your added details?</p>
                 </Modal.Description>
                 <Modal.Actions>
                     <button className="ui positive button medium"
@@ -725,12 +768,16 @@ function App() {
               <div
                 className ={showMenu ? "visibleSidebar" : "hiddenSidebar"}
                 >
-                <p onClick={() => startPage ? setStartPage(false) : setShowResetConfirm(true)}
+                <p onClick={() => {
+                    setShowMenu(!showMenu)
+                    startPage ? setStartPage(false) : setShowResetConfirm(true)
+                }}
                 >
                    <i className="icon football ball"></i>Create New
                 </p>
                 <p
                     onClick={() => {
+                        setShowMenu(!showMenu)
                         setHasError(false)
                         setFindRoster({...findRoster, showForm: true})}}
                 >
@@ -809,7 +856,7 @@ function App() {
 
     return (
         <div className="App">
-            {sidebarMenu()}
+            {startPage ? '' : sidebarMenu()}
             {resetQuestion()}
             {renderLookupForm()}
             <div className="nav">
