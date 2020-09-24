@@ -95,12 +95,11 @@ function App() {
                     }}    
                 >
                     <i className="clock outline icon big"></i>
-                    <p>Lineup Reminder sends you optimized lineup recommendations just in time
+                    <p>Lineup Reminder texts you weekly curated lineup recommendations
                     </p>
                 </div>
                 <div id="startFact">
-                    <p>Upload your roster once and we'll send weekly texts Thursdays at 5 of who to start
-                        and who to sit
+                    <p>Create a roster and we'll message every Thursday at 5PM with start/sit suggestions. Update your players anytime
                     </p>
                     <i className="mail icon big"></i>
                 </div>
@@ -219,14 +218,15 @@ function App() {
                 SMSForm.append('parameters', JSON.stringify(rosterDetails))
             }
 
-            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
-            'http://127.0.0.1:8000/players/generateCode'
+            let url = action === 'verify' ? 'http://fflo-server.herokuapp.com/players/verifyCode' :
+            'http://fflo-server.herokuapp.com/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
                 body: SMSForm
             })
             let resultsJson = await fetchResults.json()
+            console.log(resultsJson)
             if (resultsJson) {
                 if (resultsJson === "send success") {
                     setSMSDetails({...SMSDetails, sendSuccess: true, initialSend: true})
@@ -326,7 +326,8 @@ function App() {
             return (
                 <form className="ui form">
                     <i className="check circle icon green massive"></i>
-                    <p>Your lineup has been saved. Look for a message this Thursday at 5PM</p>
+                    <p>We just sent a confirmation of your current lineup.
+                        Look out for a follow-up this Thursday at 5PM</p>
                 </form>
             )}
     }
@@ -381,7 +382,7 @@ function App() {
                 let SMSForm = new FormData()
                 SMSForm.append('number', findRoster.sendNumber)
     
-                let fetchResults = await fetch("http://127.0.0.1:8000/players/getRosters", {
+                let fetchResults = await fetch("https://fflo-server.herokuapp.com/players/getRosters", {
                     method: 'POST',
                     body: SMSForm
                 })
