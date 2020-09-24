@@ -1,26 +1,27 @@
 {
   "files": {
-    "main.css": "/FFLO_Client/static/css/main.6ccc8457.chunk.css",
-    "main.js": "/FFLO_Client/static/js/main.8dd5d7e4.chunk.js",
-    "main.js.map": "/FFLO_Client/static/js/main.8dd5d7e4.chunk.js.map",
+    "main.css": "/FFLO_Client/static/css/main.103f64f0.chunk.css",
+    "main.js": "/FFLO_Client/static/js/main.fd309994.chunk.js",
+    "main.js.map": "/FFLO_Client/static/js/main.fd309994.chunk.js.map",
     "runtime-main.js": "/FFLO_Client/static/js/runtime-main.5cf9b6e9.js",
     "runtime-main.js.map": "/FFLO_Client/static/js/runtime-main.5cf9b6e9.js.map",
-    "static/js/2.fe1a3945.chunk.js": "/FFLO_Client/static/js/2.fe1a3945.chunk.js",
-    "static/js/2.fe1a3945.chunk.js.map": "/FFLO_Client/static/js/2.fe1a3945.chunk.js.map",
+    "static/js/2.ccc22343.chunk.js": "/FFLO_Client/static/js/2.ccc22343.chunk.js",
+    "static/js/2.ccc22343.chunk.js.map": "/FFLO_Client/static/js/2.ccc22343.chunk.js.map",
     "index.html": "/FFLO_Client/index.html",
-    "precache-manifest.e173b285c1d3b695205e09c02167b76f.js": "/FFLO_Client/precache-manifest.e173b285c1d3b695205e09c02167b76f.js",
+    "precache-manifest.b16db82dffaae6fea68fa0084bae759e.js": "/FFLO_Client/precache-manifest.b16db82dffaae6fea68fa0084bae759e.js",
     "service-worker.js": "/FFLO_Client/service-worker.js",
-    "static/css/main.6ccc8457.chunk.css.map": "/FFLO_Client/static/css/main.6ccc8457.chunk.css.map",
-    "static/js/2.fe1a3945.chunk.js.LICENSE.txt": "/FFLO_Client/static/js/2.fe1a3945.chunk.js.LICENSE.txt",
+    "static/css/main.103f64f0.chunk.css.map": "/FFLO_Client/static/css/main.103f64f0.chunk.css.map",
+    "static/js/2.ccc22343.chunk.js.LICENSE.txt": "/FFLO_Client/static/js/2.ccc22343.chunk.js.LICENSE.txt",
     "static/media/Loading_Spinner.gif": "/FFLO_Client/static/media/Loading_Spinner.79afee20.gif",
     "static/media/doh.gif": "/FFLO_Client/static/media/doh.2d6b300a.gif",
-    "static/media/field.jpg": "/FFLO_Client/static/media/field.9fcf0c07.jpg",
+    "static/media/ffnlogo2.gif": "/FFLO_Client/static/media/ffnlogo2.c3081174.gif",
+    "static/media/headerfootball.png": "/FFLO_Client/static/media/headerfootball.06a304c6.png",
     "static/media/helmet.png": "/FFLO_Client/static/media/helmet.dd87be7f.png"
   },
   "entrypoints": [
     "static/js/runtime-main.5cf9b6e9.js",
-    "static/js/2.fe1a3945.chunk.js",
-    "static/css/main.6ccc8457.chunk.css",
-    "static/js/main.8dd5d7e4.chunk.js"
+    "static/js/2.ccc22343.chunk.js",
+    "static/css/main.103f64f0.chunk.css",
+    "static/js/main.fd309994.chunk.js"
   ]
 }

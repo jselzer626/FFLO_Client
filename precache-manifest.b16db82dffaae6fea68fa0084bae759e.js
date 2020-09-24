@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "9b5d2fc6dab0ec34e1ebc40493524860",
+    "revision": "7ddf91715177611ef1c26d56a33c4eee",
     "url": "/FFLO_Client/index.html"
   },
   {
-    "revision": "7fd87f05b577fea59a9b",
-    "url": "/FFLO_Client/static/css/main.6ccc8457.chunk.css"
+    "revision": "8bd13a527cf2c926dea9",
+    "url": "/FFLO_Client/static/css/main.103f64f0.chunk.css"
   },
   {
-    "revision": "82032078eb0480de4b7d",
-    "url": "/FFLO_Client/static/js/2.fe1a3945.chunk.js"
+    "revision": "91b6ab1e768483c4197a",
+    "url": "/FFLO_Client/static/js/2.ccc22343.chunk.js"
   },
   {
     "revision": "5bd09eb7f2cf4d145d532d862be18942",
-    "url": "/FFLO_Client/static/js/2.fe1a3945.chunk.js.LICENSE.txt"
+    "url": "/FFLO_Client/static/js/2.ccc22343.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "7fd87f05b577fea59a9b",
-    "url": "/FFLO_Client/static/js/main.8dd5d7e4.chunk.js"
+    "revision": "8bd13a527cf2c926dea9",
+    "url": "/FFLO_Client/static/js/main.fd309994.chunk.js"
   },
   {
     "revision": "5339797cd7071c153886",
@@ -32,8 +32,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/FFLO_Client/static/media/doh.2d6b300a.gif"
   },
   {
-    "revision": "9fcf0c07c8d72f989161ee0e45f6addd",
-    "url": "/FFLO_Client/static/media/field.9fcf0c07.jpg"
+    "revision": "c30811747c20ccb6d958b2637e22d92d",
+    "url": "/FFLO_Client/static/media/ffnlogo2.c3081174.gif"
+  },
+  {
+    "revision": "06a304c6a64364d3507bae28002a2c73",
+    "url": "/FFLO_Client/static/media/headerfootball.06a304c6.png"
   },
   {
     "revision": "dd87be7f687c2203461ff2f73eedc49e",
