@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import LoadingSpinner from './images/Loading_Spinner.gif'
 import helmet from './images/helmet.png'
-import fieldImg from './images/field.jpg'
-import successCheck from './images/success_check.png'
 import doh from './images/doh.gif'
 import ffnLogo from './images/ffnlogo2.gif'
 import { Modal, Dropdown } from 'semantic-ui-react'
 import { render } from 'react-dom'
+import football from './images/headerfootball.png'
 
 const details = ['type', 'name', 'RB', 'QB', 'WR', 'TE', 'FLEX', 'K', 'DEF', 'Total', 'Bench']
 const leagueTypes = ["Standard", "PPR"]
@@ -87,7 +86,7 @@ function App() {
         return (
             <div className="startMenu">
                 <div>
-                    <h1>Curated lineup reminders texted just in time!</h1>
+                    <h1>Never miss a fantasy football lineup again!</h1>
                 </div>
                 <div>
                     <img className="ui image fluid" src={helmet}/>
@@ -95,15 +94,20 @@ function App() {
                 <div className="startMenuButtons">
                     <div>
                         <button
-                            className="ui fluid large button positive"
-                            onClick={() => setStartPage(false)}
+                            className="ui fluid large button"
+                            style={{"backgroundColor": "darkgreen", "color": "white"}}
+                            onClick={() => {
+                                setStartPage(false)
+                                setTimeout(() => setShowAbout(true), 3000)
+                            }}
                         >
                             Create New
                             </button>
                     </div>
                     <div>
                         <button
-                            className="ui fluid large button positive"
+                            className="ui fluid large button"
+                            style={{"backgroundColor": "darkgreen", "color": "white"}}
                             onClick={() => setFindRoster({...findRoster, showForm: true})}
                         >Edit Existing</button>
                     </div>
@@ -181,18 +185,26 @@ function App() {
 
         return (
             <Modal
+                size="tiny"
                 closeIcon
                 open={showAbout}
                 onOpen={() => setShowAbout(true)}
                 onClose={() => setShowAbout(false)}
                 trigger={<p><i className="icon football ball"></i>About</p>}
             >
-                <Modal.Header>
-                    <h2>Never miss a lineup again!</h2>
+                <Modal.Header
+                    style={{"backgroundColor": "darkgreen", "color": "white"}}>
+                    <h2>Welcome!</h2>
                 </Modal.Header>
                 <Modal.Content>
-                    <Modal.Description>
-
+                    <Modal.Description
+                    id="aboutOptions">
+                        <div><i className="setting icon big"></i><p>Edit roster parameters by clicking on <span style={{"color": "gray"}}><i className="setting icon"></i>Settings</span>
+                        </p></div>
+                        <div><i className="list ol icon big"></i><p>Add players to your roster</p></div>
+                        <div><i className="icon check circle big"></i><p>Once all your players are added, a <button className="ui small button positive">Set up reminder!</button> button will appear.</p></div>
+                        <div><i className="phone icon big"></i><p>Add your phone number</p></div>
+                        <div><i className="mail icon big"></i><p>We'll send a message every Thursday at 5PM with suggested starters and bench</p></div>
                     </Modal.Description>
                 </Modal.Content>
             </Modal>
@@ -689,9 +701,7 @@ function App() {
                 >
                     <i className="icon football ball"></i>Edit Existing
                 </p>
-                <p>
-                    <i className="icon football ball"></i>About
-                </p>
+                {renderAboutModal()}
               </div>
           </div>
         )
@@ -768,7 +778,7 @@ function App() {
             {resetQuestion()}
             {renderLookupForm()}
             <div className="nav">
-                <h1>FFLO</h1>
+                <h1>FFLR</h1>
             </div>
             <div className="ui text container raised segment"
             onClick={() => setShowMenu(false)}>

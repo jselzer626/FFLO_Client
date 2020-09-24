@@ -240,7 +240,7 @@ div.column.tewelve.wide input{
 }
 
 .nav {
-  background-color: darkslategrey;
+  background-color: darkgreen;
   height: 5vh;
   border-bottom: 2px solid slategrey;
   display: flex;
@@ -250,6 +250,19 @@ i.bars.icon.large {
   color: white;
   margin-top: 1vh;
   margin-left: 1vh;
+}
+
+#aboutOptions div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid gainsboro;
+  padding-bottom: 2vh;
+  margin-bottom: 2vh;
+  align-items: center;
+}
+
+#aboutOptions div > p {
+  width: 75%;
 }
 
 #listSpacer {
