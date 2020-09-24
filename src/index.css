@@ -23,6 +23,16 @@ form.ui.form .ui.input {
   font-size: 1.15rem;
 }
 
+.ui.modal>.content>.description {
+  margin-bottom: 2vh;
+}
+
+#successIndicator {
+  background-color: rgb(221, 255, 221);
+  text-align: center;
+  margin-bottom: 2vh;
+}
+
 .App {
   background-color: gainsboro;
   min-height: 100vh;

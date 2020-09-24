@@ -4,6 +4,7 @@ import helmet from './images/helmet.png'
 import fieldImg from './images/field.jpg'
 import successCheck from './images/success_check.png'
 import doh from './images/doh.gif'
+import ffnLogo from './images/ffnlogo2.gif'
 import { Modal, Dropdown } from 'semantic-ui-react'
 import { render } from 'react-dom'
 
@@ -33,6 +34,7 @@ function App() {
     const [SMSDetails, setSMSDetails] = useState({showForm: false, autoShow: true, sendNumber: '', verifyCode:'', sendSuccess:false, verified:false, initialSend:false})
     const [findRoster, setFindRoster] = useState({showForm: false,  sendNumber:'', rostersRetrieved:[], sendSuccess: false})
     const [showResetConfirm, setShowResetConfirm] = useState(false)
+    const [showAbout, setShowAbout] = useState(false)
 
     useEffect(() => {
         setLoading(true)
@@ -175,6 +177,29 @@ function App() {
         )
     }
 
+    const renderAboutModal = () => {
+
+        return (
+            <Modal
+                closeIcon
+                open={showAbout}
+                onOpen={() => setShowAbout(true)}
+                onClose={() => setShowAbout(false)}
+                trigger={<p><i className="icon football ball"></i>About</p>}
+            >
+                <Modal.Header>
+                    <h2>Never miss a lineup again!</h2>
+                </Modal.Header>
+                <Modal.Content>
+                    <Modal.Description>
+
+                    </Modal.Description>
+                </Modal.Content>
+            </Modal>
+        )
+
+
+    }
     const renderSMSFormContent = () => {
         
         if (!SMSDetails.initialSend) {
@@ -298,7 +323,7 @@ function App() {
                 onClose={() => setSMSDetails({...SMSDetails, showForm: false})}
                 onOpen={() => setSMSDetails({...SMSDetails, showForm: true})}
                 open={SMSDetails.showForm}
-                trigger={<button className="ui button small positive">Set up reminder!</button>}
+                trigger={<button className="ui button huge fluid positive">Set up reminder!</button>}
                 size="tiny"
             >
                 <Modal.Header>
@@ -756,6 +781,12 @@ function App() {
                                 <h2
                                 style={{"marginBottom": "1vh", "textAlign": "center"}}
                                 >Build/Edit Roster</h2>
+                                {allPositions.every(pos => parseInt(rosterDetails[`${pos}`]) === addedPlayerDetails[`${pos}`]) ? 
+                                <div className="ui raised segment" id="successIndicator">
+                                    <h2>All positions filled!<i className="check circle icon green large"></i></h2>
+                                   {renderSMSForm()}
+                                </div> : 
+                                '' }
                             </div>
                                 {renderInputForm()}
                                 <div id="playerListHeader">
@@ -773,7 +804,11 @@ function App() {
                             <div><h3>{currentRoster.name}</h3></div>
                             <div>{renderRosterSelect()}</div>
                             <div>{addedPlayerDetails.Total} of {rosterDetails.Total} added</div>
-                            {!SMSDetails.autoShow ? renderSMSForm() : ''}
+                            {window.screen.width < 400 && 
+                                allPositions.every(pos => parseInt(rosterDetails[`${pos}`]) === addedPlayerDetails[`${pos}`]) 
+                                ? <button className="ui small button positive"
+                                        onClick={() => {setSMSDetails({...SMSDetails, showForm: true})}}>
+                                            Set up reminder </button> : ''}
                         </div>
                         <div id="rosterPositionContainer">
                             {renderRoster()}
