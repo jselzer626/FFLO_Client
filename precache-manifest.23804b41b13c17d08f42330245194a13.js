@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2d9dc29ec0200da2a0bdaaf980f9f316",
+    "revision": "60f200a94a89afc3a9e9b02416facf46",
     "url": "/FFLO_Client/index.html"
   },
   {
-    "revision": "a25d19e8f9280866bca6",
+    "revision": "bec3bec5c811692e4547",
     "url": "/FFLO_Client/static/css/main.103f64f0.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/FFLO_Client/static/js/2.ccc22343.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "a25d19e8f9280866bca6",
-    "url": "/FFLO_Client/static/js/main.039ec7b8.chunk.js"
+    "revision": "bec3bec5c811692e4547",
+    "url": "/FFLO_Client/static/js/main.7dadeca0.chunk.js"
   },
   {
     "revision": "5339797cd7071c153886",
