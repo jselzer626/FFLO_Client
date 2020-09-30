@@ -26,7 +26,7 @@ function App() {
     const [rosterDetails, setRosterDetails] = useState({type: 'Standard', QB: 1, RB: 2, WR: 3, TE: 1, FLEX: 2, DEF: 1, K: 1, Total: 11, Bench: 1})
     const [addedPlayerDetails, setAddedPlayerDetails] = useState({QB: 0, RB: 0, WR: 0, TE: 0, FLEX: 0, DEF: 0, K: 0, Total: 0, Bench: 0})
     const [loading, setLoading] = useState(false)
-    const [hasError, setHasError] = useState(false)
+    const [hasError, setHasError] = useState({generalError: false, duplicateError: false})
     const [startPage, setStartPage] = useState(true)
     const [showMenu, setShowMenu] = useState(false)
     const [currentSelected, setCurrentSelected] = useState('')
@@ -168,30 +168,7 @@ function App() {
             </Modal>
         )
     }
-    /**
-     * <div className="startMenuButtons">
-                    <div>
-                        <button
-                            className="ui fluid large button"
-                            style={{"backgroundColor": "darkgreen", "color": "white"}}
-                            onClick={() => {
-                                setStartPage(false)
-                                setTimeout(() => setShowAbout(true), 3000)
-                            }}
-                        >
-                            New Lineup
-                            </button>
-                    </div>
-                    <div>
-                        <button
-                            className="ui fluid large button"
-                            style={{"backgroundColor": "darkgreen", "color": "white"}}
-                            onClick={() => setFindRoster({...findRoster, showForm: true})}
-                        >Edit Existing</button>
-                    </div>
-                </div>
-     */
-    //renderSMS sendform automatically the first time that user fills out lineup
+  
     useEffect(() => {
 
         if (allPositions.every(pos => parseInt(rosterDetails[`${pos}`]) === addedPlayerDetails[`${pos}`]) 
@@ -219,7 +196,7 @@ function App() {
             }
 
             let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
-            'https://fflo-server.herokuapp.com/players/generateCode'
+            'http://127.0.0.1:8000/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
@@ -233,21 +210,23 @@ function App() {
                 } else if (resultsJson === "verified") {
                     setSMSDetails({...SMSDetails, verified: true, initialSend: true})
                 } else if (resultsJson === "error") {
-                    setHasError(true)
+                    setHasError({...hasError, generalError: true})
+                } else if (resultsJson === "duplicate name") {
+                    setHasError({...hasError, duplicateError: true})
                 }
             }
             
         } catch(e) {
-            setHasError(true)
+            setHasError({...hasError, generalError: true})
             console.warn(e)
         }
 
     }
 
-    const renderErrorMessage = () => {
+    const renderErrorMessage = (message="Oops! Something went wrong") => {
         return (
             <div style={{"textAlign": "center"}}>
-                <h2>Oops! Something went wrong</h2>
+                <h2>{message}</h2>
                 <div className="ui image fluid"
                     style={{"padding-right": "5vh", "padding-left": "5vh"}}    
                 >
@@ -399,7 +378,7 @@ function App() {
                 setLoading(false)
 
             } catch(e) {
-                setHasError(true)
+                setHasError({...hasError, generalError: true})
                 setLoading(false)
                 console.warn(e)
             }
@@ -411,7 +390,9 @@ function App() {
         return (
             <Modal
                 closeIcon
-                onClose={() => setSMSDetails({...SMSDetails, showForm: false})}
+                onClose={() => {
+                    setHasError({...hasError, duplicateError: false})
+                    setSMSDetails({...SMSDetails, showForm: false})}}
                 onOpen={() => setSMSDetails({...SMSDetails, showForm: true})}
                 open={SMSDetails.showForm}
                 trigger={<button className="ui button huge fluid positive">Set up reminder!</button>}
@@ -420,19 +401,19 @@ function App() {
                 <Modal.Header>
                     {SMSDetails.verified ? <h2>Good To Go!</h2> : <h2>Set Up Text Reminder</h2>}
                 </Modal.Header>
-                <Modal.Content>
-                        <Modal.Description>
-                            {renderSMSFormContent()}
-                        </Modal.Description>
-                        <Modal.Actions
-                        style={{"display": SMSDetails.verified ? "none" : "block"}}>
-                        <button className="ui large button fluid positive"
-                            onClick={(e) => {
-                                !SMSDetails.initialSend ? handleCode(e) : handleCode(e, 'verify')
-                            }}
-                        >Send</button>            
-                        </Modal.Actions>    
-                </Modal.Content>
+                    <Modal.Content>
+                            <Modal.Description>
+                                {hasError.duplicateError ? renderErrorMessage("Oops! You've already used that roster name") : renderSMSFormContent()}
+                            </Modal.Description>
+                            <Modal.Actions
+                            style={{"display": SMSDetails.verified || hasError.duplicateError ? "none" : "block"}}>
+                            <button className="ui large button fluid positive"
+                                onClick={(e) => {
+                                    !SMSDetails.initialSend ? handleCode(e) : handleCode(e, 'verify')
+                                }}
+                            >Send</button>            
+                            </Modal.Actions>
+                    </Modal.Content>
             </Modal>)
 
     }
@@ -454,10 +435,11 @@ function App() {
                 </Modal.Header>
                 <Modal.Content>
                     <Modal.Description>
-                    {loading ? renderLoadingGraphic() : hasError ? renderErrorMessage() : renderLookUpFormContent()}
+                    {loading ? renderLoadingGraphic() : hasError.generalError ? renderErrorMessage("No rosters for that phone number!") 
+                        : renderLookUpFormContent()}
                     </Modal.Description>
                     <Modal.Actions
-                        style={{"display": (!findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0) && !hasError ? "block" : "none"}}
+                        style={{"display": (!findRoster.rostersRetrieved || findRoster.rostersRetrieved.length == 0) && !hasError.generalError ? "block" : "none"}}
                     >
                         <button className="ui large button positive fluid"
                             onClick={e => getRostersFromServer(e)}
@@ -662,8 +644,10 @@ function App() {
                             setCurrentSelected(player.id)
                             }}
                         //only for desktop
-                        onMouseEnter={e => window.screen.width > 400 ? e.currentTarget.style.backgroundColor = "gainsboro" : ''}
-                        onMouseLeave={e => player.id !== currentSelected ? e.currentTarget.style.backgroundColor = "" : "lightgreen"}
+                        onMouseEnter={e => window.screen.width > 400 && e.currentTarget.style.backgroundColor === '' 
+                        ? e.currentTarget.style.backgroundColor = "gainsboro" : ''}
+                        onMouseLeave={e => player.id !== currentSelected && e.currentTarget.style.backgroundColor === "gainsboro" 
+                        ? e.currentTarget.style.backgroundColor = "" : "lightgreen"}
                         >
                         <div>
                             <img
@@ -779,7 +763,7 @@ function App() {
                 <p
                     onClick={() => {
                         setShowMenu(!showMenu)
-                        setHasError(false)
+                        setHasError({...hasError, generalError: false})
                         setFindRoster({...findRoster, showForm: true})}}
                 >
                     <i className="icon football ball"></i>Edit Existing
@@ -886,9 +870,9 @@ function App() {
                                     <h3>All Players</h3>
                                     {renderFilter()}
                                 </div>
-                                {loading ? renderLoadingGraphic() : hasError ? renderErrorMessage() : renderPlayerList()}
+                                {loading ? renderLoadingGraphic() : hasError.generalError ? renderErrorMessage() : renderPlayerList()}
                         </div>
-                        <div id="listSpacer" style={{"display": hasError ? "none" : "block"}}>
+                        <div id="listSpacer" style={{"display": hasError.generalError ? "none" : "block"}}>
                             {loading ? '' : <p>Click on a player to add</p>}
                         </div>
                     </div>
