@@ -38,7 +38,7 @@ function App() {
 
     useEffect(() => {
         setLoading(true)
-        fetch('https://fflo-server.herokuapp.com/players/loadInitial').then(
+        fetch('http://127.0.0.1:8000/players/loadInitial').then(
             async(res) => {
                 let playerList = await res.json()
 
@@ -195,8 +195,8 @@ function App() {
                 SMSForm.append('parameters', JSON.stringify(rosterDetails))
             }
 
-            let url = action === 'verify' ? 'https://fflo-server.herokuapp.com/players/verifyCode' :
-            'https://fflo-server.herokuapp.com/players/generateCode'
+            let url = action === 'verify' ? 'http://127.0.0.1:8000/players/verifyCode' :
+            'http://127.0.0.1:8000/players/generateCode'
 
             let fetchResults = await fetch(url, {
                 method: 'POST',
@@ -361,7 +361,7 @@ function App() {
                 let SMSForm = new FormData()
                 SMSForm.append('number', findRoster.sendNumber)
     
-                let fetchResults = await fetch("https://fflo-server.herokuapp.com/players/getRosters", {
+                let fetchResults = await fetch("http://127.0.0.1:8000/players/getRosters", {
                     method: 'POST',
                     body: SMSForm
                 })
@@ -611,6 +611,7 @@ function App() {
     const renderCardContent = (player, contentType) => {
 
         if (currentRoster.Total.length >= rosterDetails.Total && player.id === currentSelected) {
+            console.log(currentSelected)
             return contentType === "text" ? <div id="addedGraphic">Roster already full</div> : "lightcoral"
         } else if (player.id === currentSelected) {
             return contentType === "text" ? <div id="addedGraphic">Added to roster!</div> : "lightgreen"
@@ -620,16 +621,6 @@ function App() {
             return contentType === "text" ? <div>{player.position} {player.team}</div> : ''
         }
     }
-
-    /*
-    old 
-    style={{"backgroundColor": player.id === currentSelected ? "lightgreen" : 
-                        currentRoster.Total.includes(player) ? "#FFFFBA" :
-                        '' }}
-    {player.id === currentSelected ? <div id="addedGraphic">Added to roster!</div> : 
-                                currentRoster.Total.includes(player) ? <div>Already in roster</div> : <div>{player.position} {player.team}</div>}
-    
-    */
 
     const renderPlayerCard = (player, location="mainSearch") => {
         if (location==="mainSearch") {
